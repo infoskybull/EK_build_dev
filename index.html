@@ -73,12 +73,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/7e336daf75736339babea11bf57f8218.loader.js";
+      var loaderUrl = buildUrl + "/e4cde2a524a20119aa82afe7dc89eaac.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/108ce01e05cee5c868f25b664b5acc08.data.unityweb",
+        dataUrl: buildUrl + "/e4ee5d0abe796c16904ea4dfb335b55a.data.unityweb",
         frameworkUrl: buildUrl + "/fdebae9ca70b54f8fc48b6923141c69a.framework.js.unityweb",
-        codeUrl: buildUrl + "/1d107cc8bd32c442bbb72d851e88a937.wasm.unityweb",
+        codeUrl: buildUrl + "/b4cb32b359cf6b0a3940818c4852e51c.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Skybull",
         productName: "Eternal Kings",
@@ -126,18 +126,18 @@
       document.querySelector("#unity-loading-bar").style.display = "block";
 
       var script = document.createElement("script");
+      var unityInstanceGlobal;
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                document.querySelector("#unity-loading-bar").style.display = "none";
-          
-
-              }).catch((message) => {
-                alert(message);
-              });
-            };
+        }).then((unityInstance) => {
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          unityInstanceGlobal = unityInstance;
+        }).catch((message) => {
+          alert(message);
+        });
+      };
 
       document.body.appendChild(script);
 

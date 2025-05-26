@@ -9,27 +9,6 @@
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <script src="https://unpkg.com/@tonconnect/ui@2.1.0/dist/tonconnect-ui.min.js"></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <style>
-      @media screen and (orientation:landscape) {
-        body::before {
-          content: "Please rotate your device to portrait mode.";
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: fixed;
-          width: 100vw;
-          height: 100vh;
-          background: #000;
-          color: white;
-          font-size: 2em;
-          text-align: center;
-          z-index: 9999;
-        }
-        #unity-canvas {
-          display: none !important;
-        }
-      }
-    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">

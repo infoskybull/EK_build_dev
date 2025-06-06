@@ -1,5 +1,6 @@
 <linker>
   <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="EK_Remake.FontAssets" preserve="all" />
     <type fullname="EK_Remake.ForceAcceptAll" preserve="all" />
     <type fullname="EK_Remake.UpdateLightingRoom" preserve="all" />
     <type fullname="MagmaMoving" preserve="all" />

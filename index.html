@@ -6,8 +6,7 @@
     <title>Unity Web Player | Eternal Kings</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-    <script src="https://unpkg.com/@tonconnect/ui@2.1.0/dist/tonconnect-ui.min.js"></script>
+    <script src="scripts/dapp_portal_sdk.js"></script>
     <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
     <style>
       @media screen and (orientation:landscape) {
@@ -44,6 +43,178 @@
       <div id="unity-footer">
       </div>
     </div>
+
+    <script src="Build/minidapp.loader.js"></script>
+    <script>
+      var sdk = null;
+      var connectedAddress = null;
+      var myGameInstance = null;
+
+      var Module = {
+        onRuntimeInitialized: function() {
+          console.log("Runtime initialized");
+        },
+        env: {
+          MintToken: function(amount) {
+            window.MintToken(amount);
+          },
+          GetBalance: function() {
+            window.GetBalance();
+          },
+          ConnectWallet: function() {
+            window.ConnectWallet();
+          },
+          DisconnectWallet: function() {
+            window.DisconnectWallet();
+          },
+          GetConnectedAddress: function() {
+            var address = window.GetConnectedAddress();
+            var bufferSize = lengthBytesUTF8(address) + 1;
+            var buffer = _malloc(bufferSize);
+            stringToUTF8(address, buffer, bufferSize);
+            return buffer;
+          }
+        }
+      };
+
+      async function initializeSDK() {
+        try {
+          await liff.init({
+            liffId: "2007551328-2aw6m04j" // Replace with your LIFF ID
+          });
+
+          if (!liff.isLoggedIn()) {
+            liff.login();
+          }
+
+          const profile = await liff.getProfile();
+          
+          console.log("liff profile: " + profile.userId);
+
+          sdk = await DappPortalSDK.init({
+            clientId: 'YOUR CLIENT ID', // Replace with your CLIENT ID
+            chainId: '1001'
+          });
+
+          console.log("SDKs initialized");
+          return true;
+        } catch (error) {
+          console.error("SDK init error:", error);
+          return false;
+        }
+      }
+
+      window.ConnectWallet = async function() {
+        try {
+          if (!sdk) {
+            const initialized = await initializeSDK();
+            if (!initialized) return null;
+          }
+
+          if (!liff.isLoggedIn()) {
+            liff.login();
+            return;
+          }
+
+          const provider = sdk.getWalletProvider();
+          const accounts = await provider.request({ method: 'kaia_requestAccounts' });
+
+          if (accounts && accounts.length > 0) {
+            connectedAddress = accounts[0];
+            myGameInstance.SendMessage('Web3Manager', 'OnWalletConnected', connectedAddress);
+          }
+        } catch (error) {
+          myGameInstance.SendMessage('Web3Manager', 'OnWalletError', error.message);
+        }
+      }
+
+      window.DisconnectWallet = async function() {
+        try {
+          if (liff.isLoggedIn()) {
+            await liff.logout();
+          }
+
+          const provider = sdk.getWalletProvider();
+          await provider.disconnect();
+
+          // Reset connected address
+          connectedAddress = null;
+          myGameInstance.SendMessage('Web3Manager', 'OnWalletDisconnected');
+          console.log("Wallet disconnected successfully");
+
+        } catch (error) {
+          console.error("Disconnect error:", error);
+          myGameInstance.SendMessage('Web3Manager', 'OnWalletError', "Disconnect failed: " + error.message);
+        }
+      }
+
+      window.GetConnectedAddress = function() {
+        return connectedAddress || '';
+      }
+
+      window.MintToken = async function(amount) {
+        try {
+          const provider = sdk.getWalletProvider();
+
+          const mintSignature = '0xa0712d68';
+          const amountHex = amount.toString(16).padStart(64, '0');
+          const data = mintSignature + amountHex;
+
+          const tx = {
+            from: connectedAddress,
+            to: '0x099D7feC4f799d1749adA8815eB21375E13E0Ddb',
+            value: '0x0',
+            data: data,
+            gas: '0x4C4B40'
+          };
+
+          const txHash = await provider.request({
+            method: 'kaia_sendTransaction',
+            params: [tx]
+          });
+
+          myGameInstance.SendMessage('Web3Manager', 'OnMintSuccess', txHash);
+          GetBalance();
+        } catch (error) {
+          myGameInstance.SendMessage('Web3Manager', 'OnMintError', error.message);
+        }
+      }
+
+      window.GetBalance = async function() {
+        try {
+          const provider = sdk.getWalletProvider();
+
+          const balanceSignature = '0x70a08231';
+          const addressParam = connectedAddress.substring(2).padStart(64, '0');
+          const data = balanceSignature + addressParam;
+
+          const result = await provider.request({
+            method: 'kaia_call',
+            params: [{
+              from: connectedAddress,
+              to: '0x099D7feC4f799d1749adA8815eB21375E13E0Ddb',
+              data: data
+            }, 'latest']
+          });
+
+          const balance = parseInt(result, 16);
+          myGameInstance.SendMessage('Web3Manager', 'OnBalanceReceived', balance.toString());
+        } catch (error) {
+          myGameInstance.SendMessage('Web3Manager', 'OnBalanceError', error.message);
+        }
+      }
+        createUnityInstance(document.querySelector("#unity-canvas"), {
+          dataUrl: "Build/minidapp.data",
+          frameworkUrl: "Build/minidapp.framework.js",
+          codeUrl: "Build/minidapp.wasm",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "DefaultCompany",
+          productName: "minidapp",
+          productVersion: "0.1",
+        }).then((unityInstance) => {
+          myGameInstance = unityInstance;
+        });
+    </script>
     <script>
       var canvas = document.querySelector("#unity-canvas");
 

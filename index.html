@@ -204,17 +204,6 @@
           myGameInstance.SendMessage('Web3Manager', 'OnBalanceError', error.message);
         }
       }
-        createUnityInstance(document.querySelector("#unity-canvas"), {
-          dataUrl: "Build/minidapp.data",
-          frameworkUrl: "Build/minidapp.framework.js",
-          codeUrl: "Build/minidapp.wasm",
-          streamingAssetsUrl: "StreamingAssets",
-          companyName: "DefaultCompany",
-          productName: "minidapp",
-          productVersion: "0.1",
-        }).then((unityInstance) => {
-          myGameInstance = unityInstance;
-        });
     </script>
     <script>
       var canvas = document.querySelector("#unity-canvas");

@@ -82,10 +82,10 @@
       });
 
       console.log("SDKs initialized");
-      return liff.getAccessToken();
+      myGameInstance.SendMessage('LoginManager', 'OnSDKInitialized', liff.GetAccessToken());
     } catch (error) {
       console.error("SDK init error:", error);
-      return '';
+      myGameInstance.SendMessage('LoginManager', 'OnSDKInitialized', '');
     }
   }
 

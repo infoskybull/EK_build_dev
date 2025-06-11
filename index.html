@@ -98,21 +98,16 @@
         const initialized = await initializeSDK();
         if (!initialized) return null;
       }
-
-      if (!liff.isLoggedIn()) {
-        liff.login();
-        return;
-      }
-
+      
       const provider = sdk.getWalletProvider();
       const accounts = await provider.request({ method: 'kaia_requestAccounts' });
 
       if (accounts && accounts.length > 0) {
         connectedAddress = accounts[0];
-        myGameInstance.SendMessage('Web3Manager', 'OnWalletConnected', connectedAddress);
+        myGameInstance.SendMessage('LoginManager', 'OnWalletConnected', connectedAddress);
       }
     } catch (error) {
-      myGameInstance.SendMessage('Web3Manager', 'OnWalletError', error.message);
+      myGameInstance.SendMessage('LoginManager', 'OnWalletError', error.message);
     }
   }
 

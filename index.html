@@ -92,6 +92,30 @@
       myGameInstance.SendMessage('LoginManager', 'OnClickLogin', 'StartLogin');
   }
 
+  async function initializeSDK() {
+    try {
+      await liff.init({
+        liffId: "2007551328-2aw6m04j" // Replace with your LIFF ID
+      });
+
+      if (!liff.isLoggedIn()) {
+        liff.login();
+      }
+
+      sdk = await DappPortalSDK.init({
+        clientId: '8d61cfbc-6eed-47ef-bd7e-a5b1ce612544', // Replace with your CLIENT ID
+        chainId: '1001'
+      });
+
+      console.log("SDKs initialized");
+      return true;
+    } catch (error) {
+      console.error("SDK init error:", error);
+      return false;
+    }
+  }
+
+
   window.ConnectWallet = async function() {
     try {
       if (!sdk) {

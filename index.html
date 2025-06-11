@@ -73,8 +73,9 @@
         });
   
         console.log("SDKs initialized");
+        console.log("liff login : " + liff.isLoggedIn());
 
-        if (!liff.isLoggedIn()) {
+        if (liff.isLoggedIn()) {
           myGameInstance.SendMessage('LoginManager', 'OnCheckLogin', String(liff.getAccessToken()));
         }
         else {

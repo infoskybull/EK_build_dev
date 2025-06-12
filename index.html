@@ -84,6 +84,13 @@
           
   }
   
+  async function logoutLiff()
+  {
+      if (liff.isLoggedIn()) {
+        liff.logout();
+      }
+  }
+  
   async function loginLiff() {
 
       await liff.init({

@@ -131,6 +131,11 @@
     const signature = await provider.request({method: 'personal_sign', params: [message, connectedAddress]});
     myGameInstance.SendMessage('LoginManager', 'OnSignMessage', signature);
   }
+  
+  async function startPayment(paymentId) {
+    const paymentProvider = sdk.getPaymentProvider();
+    await paymentProvider.startPayment(paymentId);
+  }
 
 
   window.ConnectWallet = async function() {
@@ -146,6 +151,7 @@
       if (accounts && accounts.length > 0) {
         connectedAddress = accounts[0];
         myGameInstance.SendMessage('LoginManager', 'OnWalletConnected', connectedAddress);
+        myGameInstance.SendMessage('Web3Manager', 'OnWalletConnected', connectedAddress);
       }
     } catch (error) {
       myGameInstance.SendMessage('LoginManager', 'OnWalletError', error.message);
@@ -234,7 +240,7 @@
     } catch (err) {
       console.warn("Unity not ready or already unloaded.");
     }
-  });
+  })
 
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl: "Build/EK.data",

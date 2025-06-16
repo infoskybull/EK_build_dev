@@ -138,7 +138,7 @@
       await paymentProvider.startPayment(paymentId);
       myGameInstance.SendMessage('Web3Manager', 'OnPaymentDone', "Payment success");
     } catch (error) {
-      myGameInstance.SendMessage('Web3Manager', 'OnPaymentError', error.message);
+      myGameInstance.SendMessage('Web3Manager', 'OnPaymentError', error.data);
     }
   }
 
@@ -155,10 +155,11 @@
 
       if (accounts && accounts.length > 0) {
         connectedAddress = accounts[0];
-        myGameInstance.SendMessage('LoginManager', 'OnWalletConnected', connectedAddress);
         myGameInstance.SendMessage('Web3Manager', 'OnWalletConnected', connectedAddress);
+        myGameInstance.SendMessage('LoginManager', 'OnWalletConnected', connectedAddress);
       }
     } catch (error) {
+      myGameInstance.SendMessage('Web3Manager', 'OnWalletError', connectedAddress);
       myGameInstance.SendMessage('LoginManager', 'OnWalletError', error.message);
     }
   }

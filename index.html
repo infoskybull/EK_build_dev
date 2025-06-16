@@ -133,8 +133,13 @@
   }
   
   async function startPayment(paymentId) {
-    const paymentProvider = sdk.getPaymentProvider();
-    await paymentProvider.startPayment(paymentId);
+    try {
+      const paymentProvider = sdk.getPaymentProvider();
+      await paymentProvider.startPayment(paymentId);
+      myGameInstance.SendMessage('Web3Manager', 'OnPaymentDone', "Payment success");
+    } catch (error) {
+      myGameInstance.SendMessage('Web3Manager', 'OnPaymentError', error.message);
+    }
   }
 
 

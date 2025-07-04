@@ -6,34 +6,10 @@
     <title>Unity Web Player | EK</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
-    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
-    <script src="https://unpkg.com/@tonconnect/ui@2.1.0/dist/tonconnect-ui.min.js"></script>
-    <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
-    <style>
-      @media screen and (orientation:landscape) {
-        body::before {
-          content: "Please rotate your device to portrait mode.";
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: fixed;
-          width: 100vw;
-          height: 100vh;
-          background: #000;
-          color: white;
-          font-size: 2em;
-          text-align: center;
-          z-index: 9999;
-        }
-        #unity-canvas {
-          display: none !important;
-        }
-      }
-    </style>
   </head>
   <body>
     <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=1080 height=1920 tabindex="-1"></canvas>
+      <canvas id="unity-canvas" width=360 height=640 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
         <div id="unity-logo"></div>
         <div id="unity-progress-bar-empty">
@@ -129,52 +105,23 @@
       document.querySelector("#unity-loading-bar").style.display = "block";
 
       var script = document.createElement("script");
-      var unityInstanceGlobal;
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          document.querySelector("#unity-loading-bar").style.display = "none";
-          unityInstanceGlobal = unityInstance;
-        }).catch((message) => {
-          alert(message);
-        });
-      };
+              }).then((unityInstance) => {
+                document.querySelector("#unity-loading-bar").style.display = "none";
+                document.querySelector("#unity-fullscreen-button").onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
+
+              }).catch((message) => {
+                alert(message);
+              });
+            };
 
       document.body.appendChild(script);
 
-    </script>
-    <script>
-      window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
-        manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
-        testnet: true
-      });
-
-      async function testJavaScriptFunction(recipientAddress, amount) {
-        console.error("Unity says: " + recipientAddress + "_____" + amount);
-
-        const transaction = {
-          validUntil: Math.floor(Date.now() / 1000) + 300, // 5 minutes validity
-          messages:
-                  [
-                    {
-                      address: recipientAddress, // recipient
-                      amount: amount, // 50000000 = 0.05 TON in nanoTON
-                      payload: undefined, // optional, use .toBoc().toString('base64') if needed
-                    }
-                  ]
-        };
-
-        try {
-          const result = await window.tonConnect.sendTransaction(transaction);
-          console.log("✅ Transaction sent!");
-          console.log("📦 Result:", result);
-        }
-        catch (err) {
-          console.error("❌ Transaction rejected or failed:", err);
-        }
-      }
     </script>
   </body>
 </html>

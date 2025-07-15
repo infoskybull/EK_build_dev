@@ -136,7 +136,10 @@
       const DISCORD_CLIENT_ID = "1394509133318979746";
       const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
       await discordSdk.ready();
-      await discordSdk.proxy.map("https://cdn.mygame.com/", "/cdn/");
+      await discordSdk.commands.proxyMap({
+        remote_url: "https://cdn.mygame.com/",
+        local_path: "/cdn/",
+      });
       var unityInstance = null; 
 
       const script = document.createElement("script");

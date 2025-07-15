@@ -144,12 +144,12 @@
       var unityInstance = null; 
 
       const script = document.createElement("script");
-      script.src = "Build/EK.loader.js"; // Đường dẫn đến file loader do Unity tạo ra
+      script.src = "./Build/EK.loader.js"; // Đường dẫn đến file loader do Unity tạo ra
       script.onload = () => {
         createUnityInstance(document.querySelector("#unity-canvas"), {
-          dataUrl: "Build/EK.data",
-          frameworkUrl: "Build/EK.framework.js",
-          codeUrl: "Build/EK.wasm",
+          dataUrl: "./Build/EK.data",
+          frameworkUrl: "./Build/EK.framework.js",
+          codeUrl: "./Build/EK.wasm",
           streamingAssetsUrl: "StreamingAssets",
           companyName: "Skybull",
           productName: "Eternal Kings",

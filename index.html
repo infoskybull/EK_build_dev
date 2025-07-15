@@ -6,29 +6,29 @@
   <link rel="shortcut icon" href="TemplateData/favicon.ico">
   <link rel="stylesheet" href="TemplateData/style.css">
   <style>
-    /* Bao ngoài canvas Unity */
+    /* Bao toàn màn hình */
     #unity-container {
-      position: fixed;          /* chiếm toàn bộ màn hình */
-      top: 0; left: 0; right: 0; bottom: 0;
+      position: fixed;
+      inset: 0;                     /* top‑right‑bottom‑left: 0 */
       display: flex;
-      justify-content: center;  /* canh giữa ngang */
-      align-items: center;      /* canh giữa dọc */
-      background: #000;         /* màu viền đen letter‑box */
+      justify-content: center;      /* căn giữa ngang */
+      align-items: center;          /* căn giữa dọc */
+      background: #000;             /* viền đen hai bên nếu dư */
       overflow: hidden;
     }
 
-    /* Giữ tỉ lệ 16:9 bằng cách dùng padding trick */
+    /* Khung cố định tỉ lệ 9:16 (portrait) */
     #unity-wrapper {
       position: relative;
       width: 100%;
       height: 0;
-      padding-top: 177.77%;      /* 9 / 16 = 0.5625 → 56.25% */
+      padding-top: 177.78%;         /* 16 / 9 = 1.7778 → 177.78 % */
     }
 
-    /* Canvas Unity chiếm đầy khung tỉ lệ */
+    /* Canvas Unity chiếm đầy khung */
     #unity-canvas {
       position: absolute;
-      top: 0; left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
     }
@@ -122,14 +122,13 @@
 
   document.querySelector("#unity-loading-bar").style.display = "block";
 
-  var script = document.createElement("script");
-  script.src = loaderUrl;
   script.onload = () => {
     createUnityInstance(canvas, config, (progress) => {
       document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-    }).then((unityInstance) => {
+    }).then((instance) => {
       document.querySelector("#unity-loading-bar").style.display = "none";
-
+      // phát sự kiện cho mô‑đun biết Unity đã sẵn sàng
+      window.dispatchEvent(new CustomEvent("unity-loaded", { detail: instance }));
     }).catch((message) => {
       alert(message);
     });
@@ -140,43 +139,37 @@
 </script>
 
 <script type="module">
-  import {DiscordSDK} from "@discord/embedded-app-sdk";     <!-- ① dùng file tải về -->
+  /* ----- Import SDK qua CDN (hoặc file nội bộ) ----- */
+  import { DiscordSDK } from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
+  // Nếu bạn đã tải sdk về, thay đường dẫn:  import { DiscordSDK } from "./discord-sdk.mjs";
 
+  /* ----- Biến toàn cục do loader khởi tạo ----- */
+  // unityInstance được gán ở script phía trên khi createUnityInstance() hoàn tất
+  let unityInstance = null;
 
-  var myGameInstance = null;
-  const DISCORD_CLIENT_ID = "1394509133318979746";     // ← ID ứng dụng Discord của bạn
+  /* ----- Đợi Discord SDK ----- */
+  const DISCORD_CLIENT_ID = "1394509133318979746";
   const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
 
   async function initDiscord() {
     await discordSdk.ready();
-    console.log("Discord SDK đã sẵn sàng");
+    console.log("Discord SDK ready");
 
-    const {code} = await discordSdk.commands.authorize({
+    // Yêu cầu người dùng cho phép
+    const { code } = await discordSdk.commands.authorize({
       client_id: DISCORD_CLIENT_ID,
       response_type: "code",
       scopes: ["identify"]
     });
 
-
-    myGameInstance.SendMessage("DiscordBridge", "OnAuthCode", code);
+    // Gửi code sang Unity
+    unityInstance?.SendMessage("DiscordBridge", "OnAuthCode", code);
   }
 
-  window.addEventListener("DOMContentLoaded", initDiscord);
-
-  createUnityInstance(document.querySelector("#unity-canvas"), {
-    dataUrl: "Build/EK.data",
-    frameworkUrl: "Build/EK.framework.js",
-    codeUrl: "Build/EK.wasm",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "Skybull",
-    productName: "Eternal Kings",
-    productVersion: "0.1",
-
-  }, (progress) => {
-    progressFull.style.width = Math.round(progress * 100) + "%";
-  }).then((unityInstance) => {
-    myGameInstance = unityInstance;
-    //document.getElementById("unity-loading-bar").style.display = "none";
+  /* ----- Unity đã khởi tạo xong ở script trước → lắng sự kiện ----- */
+  window.addEventListener("unity-loaded", (e) => {
+    unityInstance = e.detail;   // nhận instance từ script thuần
+    initDiscord();              // khi Unity sẵn sàng mới khởi chạy Discord
   });
 </script>
 

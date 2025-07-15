@@ -121,6 +121,8 @@
   }
 
   document.querySelector("#unity-loading-bar").style.display = "block";
+  const script = document.createElement("script");
+  script.src = "Build/EK.js";
 
   script.onload = () => {
     createUnityInstance(canvas, config, (progress) => {

@@ -131,25 +131,21 @@
     </script>
 
     <script type="module">
-      /* ----- Import SDK qua CDN (hoặc file nội bộ) ----- */
       import { DiscordSDK } from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
-      // Nếu bạn đã tải sdk về, thay đường dẫn:  import { DiscordSDK } from "./discord-sdk.mjs";
 
-      /* ----- Biến toàn cục do loader khởi tạo ----- */
-      // unityInstance được gán ở script phía trên khi createUnityInstance() hoàn tất
-
-      /* ----- Đợi Discord SDK ----- */
       const DISCORD_CLIENT_ID = "1394509133318979746";
       const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
+      await discordSdk.ready();
+      await discordSdk.proxy.map("https://cdn.mygame.com/", "/cdn/");
       var unityInstance = null; 
 
       const script = document.createElement("script");
-      script.src = "./Build/EK.loader.js"; // Đường dẫn đến file loader do Unity tạo ra
+      script.src = "/.proxy/cdn/Build/EK.loader.js"; 
       script.onload = () => {
         createUnityInstance(document.querySelector("#unity-canvas"), {
-          dataUrl: "./Build/EK.data",
-          frameworkUrl: "./Build/EK.framework.js",
-          codeUrl: "./Build/EK.wasm",
+          dataUrl: "/.proxy/cdn/Build/EK.data",
+          frameworkUrl: "/.proxy/cdn/Build/EK.framework.js",
+          codeUrl: "/.proxy/cdn/Build/EK.wasm",
           streamingAssetsUrl: "StreamingAssets",
           companyName: "Skybull",
           productName: "Eternal Kings",

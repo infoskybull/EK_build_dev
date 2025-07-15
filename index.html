@@ -136,19 +136,16 @@
       const DISCORD_CLIENT_ID = "1394509133318979746";
       const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
       await discordSdk.ready();
-      await discordSdk.commands.proxyMap({
-        remote_url: "https://cdn.mygame.com/",
-        local_path: "/cdn/",
-      });
+     
       var unityInstance = null; 
 
       const script = document.createElement("script");
-      script.src = "/.proxy/cdn/Build/EK.loader.js"; 
+      script.src = "Build/EK.loader.js"; 
       script.onload = () => {
         createUnityInstance(document.querySelector("#unity-canvas"), {
-          dataUrl: "/.proxy/cdn/Build/EK.data",
-          frameworkUrl: "/.proxy/cdn/Build/EK.framework.js",
-          codeUrl: "/.proxy/cdn/Build/EK.wasm",
+          dataUrl: "Build/EK.data",
+          frameworkUrl: "Build/EK.framework.js",
+          codeUrl: "Build/EK.wasm",
           streamingAssetsUrl: "StreamingAssets",
           companyName: "Skybull",
           productName: "Eternal Kings",

@@ -1,179 +1,177 @@
 <html lang="en-us">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unity Web Player | Eternal Kings</title>
-  <link rel="shortcut icon" href="TemplateData/favicon.ico">
-  <link rel="stylesheet" href="TemplateData/style.css">
-  <style>
-    /* Bao toàn màn hình */
-    #unity-container {
-      position: fixed;
-      inset: 0;                     /* top‑right‑bottom‑left: 0 */
-      display: flex;
-      justify-content: center;      /* căn giữa ngang */
-      align-items: center;          /* căn giữa dọc */
-      background: #000;             /* viền đen hai bên nếu dư */
-      overflow: hidden;
-    }
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Eternal Kings</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+      /* Bao toàn màn hình */
+      #unity-container {
+        position: fixed;
+        inset: 0;                     /* top‑right‑bottom‑left: 0 */
+        display: flex;
+        justify-content: center;      /* căn giữa ngang */
+        align-items: center;          /* căn giữa dọc */
+        background: #000;             /* viền đen hai bên nếu dư */
+        overflow: hidden;
+      }
 
-    /* Khung cố định tỉ lệ 9:16 (portrait) */
-    #unity-wrapper {
-      position: relative;
-      width: 100%;
-      height: 0;
-      padding-top: 177.78%;         /* 16 / 9 = 1.7778 → 177.78 % */
-    }
+      /* Khung cố định tỉ lệ 9:16 (portrait) */
+      #unity-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-top: 177.78%;         /* 16 / 9 = 1.7778 → 177.78 % */
+      }
 
-    /* Canvas Unity chiếm đầy khung */
-    #unity-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-</head>
-<body>
-<div id="unity-container" class="unity-desktop">
-  <canvas id="unity-canvas" width=360 height=640 tabindex="-1"></canvas>
-  <div id="unity-loading-bar">
-    <div id="unity-logo"></div>
-    <div id="unity-progress-bar-empty">
-      <div id="unity-progress-bar-full"></div>
+      /* Canvas Unity chiếm đầy khung */
+      #unity-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=360 height=640 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+      </div>
     </div>
-  </div>
-  <div id="unity-warning"> </div>
-  <div id="unity-footer">
-  </div>
-</div>
-<script>
-  var canvas = document.querySelector("#unity-canvas");
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
 
-  function unityShowBanner(msg, type) {
-    var warningBanner = document.querySelector("#unity-warning");
-    function updateBannerVisibility() {
-      warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-    }
-    var div = document.createElement('div');
-    div.innerHTML = msg;
-    warningBanner.appendChild(div);
-    if (type == 'error') div.style = 'background: red; padding: 10px;';
-    else {
-      if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-      setTimeout(function() {
-        warningBanner.removeChild(div);
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
         updateBannerVisibility();
-      }, 5000);
-    }
-    updateBannerVisibility();
-  }
+      }
 
-  var buildUrl = "Build";
-  var loaderUrl = buildUrl + "/0170451ebed664656afba8b811d60095.loader.js";
-  var config = {
-    arguments: [],
-    dataUrl: buildUrl + "/1202f1b37edb33b19a5cafe9dfe0105b.data.unityweb",
-    frameworkUrl: buildUrl + "/530128a4309df187fca0be9e20263349.framework.js.unityweb",
-    codeUrl: buildUrl + "/269f531f901f756f5587aacad1143a5f.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "Skybull",
-    productName: "Eternal Kings",
-    productVersion: "0.1.0",
-    showBanner: unityShowBanner,
-  };
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/0170451ebed664656afba8b811d60095.loader.js";
+      var config = {
+        arguments: [],
+        dataUrl: buildUrl + "/1202f1b37edb33b19a5cafe9dfe0105b.data.unityweb",
+        frameworkUrl: buildUrl + "/530128a4309df187fca0be9e20263349.framework.js.unityweb",
+        codeUrl: buildUrl + "/269f531f901f756f5587aacad1143a5f.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Skybull",
+        productName: "Eternal Kings",
+        productVersion: "0.1.0",
+        showBanner: unityShowBanner,
+      };
 
-  // By default, Unity keeps WebGL canvas render target size matched with
-  // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-  // Set this to false if you want to decouple this synchronization from
-  // happening inside the engine, and you would instead like to size up
-  // the canvas DOM size and WebGL render target sizes yourself.
-  // config.matchWebGLToCanvasSize = false;
+      // By default, Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      // config.matchWebGLToCanvasSize = false;
 
-  // If you would like all file writes inside Unity Application.persistentDataPath
-  // directory to automatically persist so that the contents are remembered when
-  // the user revisits the site the next time, uncomment the following line:
-  // config.autoSyncPersistentDataPath = true;
-  // This autosyncing is currently not the default behavior to avoid regressing
-  // existing user projects that might rely on the earlier manual
-  // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
-  // expected to change.
+      // If you would like all file writes inside Unity Application.persistentDataPath
+      // directory to automatically persist so that the contents are remembered when
+      // the user revisits the site the next time, uncomment the following line:
+      // config.autoSyncPersistentDataPath = true;
+      // This autosyncing is currently not the default behavior to avoid regressing
+      // existing user projects that might rely on the earlier manual
+      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+      // expected to change.
 
-  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    // Mobile device style: fill the whole browser client area with the game canvas:
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
 
-    var meta = document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-    document.getElementsByTagName('head')[0].appendChild(meta);
-    document.querySelector("#unity-container").className = "unity-mobile";
-    canvas.className = "unity-mobile";
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
 
-    // To lower canvas resolution on mobile devices to gain some
-    // performance, uncomment the following line:
-    // config.devicePixelRatio = 1;
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        // config.devicePixelRatio = 1;
 
 
-  } else {
-    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-    canvas.style.width = "1080px";
-    canvas.style.height = "1920px";
-  }
+      } else {
+        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+        canvas.style.width = "1080px";
+        canvas.style.height = "1920px";
+      }
 
-  document.querySelector("#unity-loading-bar").style.display = "block";
-  const script = document.createElement("script");
-  script.src = "Build/EK.loader.js";
+      document.querySelector("#unity-loading-bar").style.display = "block";
 
-  script.onload = () => {
-    createUnityInstance(canvas, config, (progress) => {
-      document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-    }).then((instance) => {
-      document.querySelector("#unity-loading-bar").style.display = "none";
-      // phát sự kiện cho mô‑đun biết Unity đã sẵn sàng
-      window.dispatchEvent(new CustomEvent("unity-loaded", { detail: instance }));
-    }).catch((message) => {
-      alert(message);
-    });
-  };
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((instance) => {
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          // phát sự kiện cho mô‑đun biết Unity đã sẵn sàng
+          window.dispatchEvent(new CustomEvent("unity-loaded", { detail: instance }));
+        }).catch((message) => {
+          alert(message);
+        });
+      };
 
-  document.body.appendChild(script);
+      document.body.appendChild(script);
 
-</script>
+    </script>
 
-<script type="module">
-  /* ----- Import SDK qua CDN (hoặc file nội bộ) ----- */
-  import { DiscordSDK } from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
-  // Nếu bạn đã tải sdk về, thay đường dẫn:  import { DiscordSDK } from "./discord-sdk.mjs";
+    <script type="module">
+      /* ----- Import SDK qua CDN (hoặc file nội bộ) ----- */
+      import { DiscordSDK } from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
+      // Nếu bạn đã tải sdk về, thay đường dẫn:  import { DiscordSDK } from "./discord-sdk.mjs";
 
-  /* ----- Biến toàn cục do loader khởi tạo ----- */
-  // unityInstance được gán ở script phía trên khi createUnityInstance() hoàn tất
-  let unityInstance = null;
+      /* ----- Biến toàn cục do loader khởi tạo ----- */
+      // unityInstance được gán ở script phía trên khi createUnityInstance() hoàn tất
+      let unityInstance = null;
 
-  /* ----- Đợi Discord SDK ----- */
-  const DISCORD_CLIENT_ID = "1394509133318979746";
-  const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
+      /* ----- Đợi Discord SDK ----- */
+      const DISCORD_CLIENT_ID = "1394509133318979746";
+      const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
 
-  async function initDiscord() {
-    await discordSdk.ready();
-    console.log("Discord SDK ready");
+      async function initDiscord() {
+        await discordSdk.ready();
+        console.log("Discord SDK ready");
 
-    // Yêu cầu người dùng cho phép
-    const { code } = await discordSdk.commands.authorize({
-      client_id: DISCORD_CLIENT_ID,
-      response_type: "code",
-      scopes: ["identify"]
-    });
+        // Yêu cầu người dùng cho phép
+        const { code } = await discordSdk.commands.authorize({
+          client_id: DISCORD_CLIENT_ID,
+          response_type: "code",
+          scopes: ["identify"]
+        });
 
-    // Gửi code sang Unity
-    unityInstance?.SendMessage("DiscordBridge", "OnAuthCode", code);
-  }
+        // Gửi code sang Unity
+        unityInstance?.SendMessage("DiscordBridge", "OnAuthCode", code);
+      }
 
-  /* ----- Unity đã khởi tạo xong ở script trước → lắng sự kiện ----- */
-  window.addEventListener("unity-loaded", (e) => {
-    unityInstance = e.detail;   // nhận instance từ script thuần
-    initDiscord();              // khi Unity sẵn sàng mới khởi chạy Discord
-  });
-</script>
-
-</body>
+      /* ----- Unity đã khởi tạo xong ở script trước → lắng sự kiện ----- */
+      window.addEventListener("unity-loaded", (e) => {
+        unityInstance = e.detail;   // nhận instance từ script thuần
+        initDiscord();              // khi Unity sẵn sàng mới khởi chạy Discord
+      });
+    </script>
+   
+  </body>
 </html>

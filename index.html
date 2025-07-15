@@ -122,20 +122,12 @@
 
       document.querySelector("#unity-loading-bar").style.display = "block";
 
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-        }).then((instance) => {
-          document.querySelector("#unity-loading-bar").style.display = "none";
-          // phát sự kiện cho mô‑đun biết Unity đã sẵn sàng
-          window.dispatchEvent(new CustomEvent("unity-loaded", { detail: instance }));
-        }).catch((message) => {
-          alert(message);
-        });
-      };
+      
 
-      document.body.appendChild(script);
+    </script>
 
+    <script>
+     
     </script>
 
     <script type="module">
@@ -145,15 +137,35 @@
 
       /* ----- Biến toàn cục do loader khởi tạo ----- */
       // unityInstance được gán ở script phía trên khi createUnityInstance() hoàn tất
-      let unityInstance = null;
 
       /* ----- Đợi Discord SDK ----- */
       const DISCORD_CLIENT_ID = "1394509133318979746";
       const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
+      var unityInstance = null; 
 
+      const script = document.createElement("script");
+      script.src = "Build/EK.loader.js"; // Đường dẫn đến file loader do Unity tạo ra
+      script.onload = () => {
+        createUnityInstance(document.querySelector("#unity-canvas"), {
+          dataUrl: "Build/EK.data",
+          frameworkUrl: "Build/EK.framework.js",
+          codeUrl: "Build/EK.wasm",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "Skybull",
+          productName: "Eternal Kings",
+          productVersion: "0.1",
+        }).then((instance) => {
+          window.unityInstance = instance
+          unityInstance = instance;
+          console.log("✅ Unity loaded!");
+        }).catch((err) => console.error("❌ Unity load failed:", err));
+      };
+      document.body.appendChild(script);
+      
       async function initDiscord() {
         await discordSdk.ready();
         console.log("Discord SDK ready");
+        
 
         // Yêu cầu người dùng cho phép
         const { code } = await discordSdk.commands.authorize({

@@ -176,8 +176,8 @@
     unityInstance?.SendMessage("LoginManager", "OnAuthCode", code);
   }
 
-  /* ----- Unity đã khởi tạo xong ở script trước → lắng sự kiện ----- */
   window.addEventListener("unity-loaded", (e) => {
+    console.log("start discord");
     unityInstance = e.detail;   // nhận instance từ script thuần
     initDiscord();              // khi Unity sẵn sàng mới khởi chạy Discord
   });

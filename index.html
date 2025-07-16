@@ -77,20 +77,6 @@
     updateBannerVisibility();
   }
 
-  var buildUrl = "Build";
-  var loaderUrl = buildUrl + "/0170451ebed664656afba8b811d60095.loader.js";
-  var config = {
-    arguments: [],
-    dataUrl: buildUrl + "/1202f1b37edb33b19a5cafe9dfe0105b.data.unityweb",
-    frameworkUrl: buildUrl + "/530128a4309df187fca0be9e20263349.framework.js.unityweb",
-    codeUrl: buildUrl + "/269f531f901f756f5587aacad1143a5f.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "Skybull",
-    productName: "Eternal Kings",
-    productVersion: "0.1.0",
-    showBanner: unityShowBanner,
-  };
-
   // By default, Unity keeps WebGL canvas render target size matched with
   // the DOM size of the canvas element (scaled by window.devicePixelRatio)
   // Set this to false if you want to decouple this synchronization from
@@ -125,6 +111,18 @@
 
 </script>
 
+<script>
+  // ✅ Đảm bảo WebAssembly thấy đúng "env.JS_Eval_EvalJS"
+  if (!window.Module) window.Module = {};
+  if (!Module.imports) Module.imports = {};
+  if (!Module.imports.env) Module.imports.env = {};
+
+  Module.imports.env.JS_Eval_EvalJS = function(ptr) {
+    console.log('[MOCK] JS_Eval_EvalJS called with ptr:', ptr);
+    return 0;
+  };
+</script>
+
 <script type="module">
   import {DiscordSDK} from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
 
@@ -133,15 +131,6 @@
   await discordSdk.ready();
 
   var unityInstance = null;
-
-  window.Module = window.Module || {};
-  window.Module.env = window.Module.env || {};
-
-  // Tạo function giả nếu không dùng thực sự
-  window.Module.env.JS_Eval_EvalJS = function(ptr) {
-    console.log("[Mock] JS_Eval_EvalJS called with pointer:", ptr);
-    return 0;
-  };
 
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";

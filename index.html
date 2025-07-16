@@ -121,14 +121,11 @@
     // performance, uncomment the following line:
     // config.devicePixelRatio = 1;
 
-
-
     document.querySelector("#unity-loading-bar").style.display = "block";
 
 
 
 </script>
-
 
 <script type="module">
   import {DiscordSDK} from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
@@ -138,8 +135,6 @@
   await discordSdk.ready();
 
   var unityInstance = null;
-
-
 
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";

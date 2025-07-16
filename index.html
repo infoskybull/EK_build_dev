@@ -123,8 +123,6 @@
 
     document.querySelector("#unity-loading-bar").style.display = "block";
 
-
-
 </script>
 
 <script type="module">
@@ -135,6 +133,13 @@
   await discordSdk.ready();
 
   var unityInstance = null;
+
+  window.env = window.env || {};
+
+  window.env.JS_Eval_EvalJS = function(ptr) {
+    console.log("⚙️ JS_Eval_EvalJS was called with ptr:", ptr);
+    return 0;
+  };
 
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";

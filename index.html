@@ -173,7 +173,7 @@
     });
 
     // Gửi code sang Unity
-    unityInstance?.SendMessage("DiscordBridge", "OnAuthCode", code);
+    unityInstance?.SendMessage("LoginManager", "OnAuthCode", code);
   }
 
   /* ----- Unity đã khởi tạo xong ở script trước → lắng sự kiện ----- */

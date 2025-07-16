@@ -113,7 +113,7 @@
 
 <script>
   // ✅ Đảm bảo WebAssembly thấy đúng "env.JS_Eval_EvalJS"
-  
+
 </script>
 
 <script type="module">
@@ -134,7 +134,7 @@
     console.log('[MOCK] JS_Eval_EvalJS called with ptr:', ptr);
     return 0;
   };
-  
+
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";
   script.onload = () => {
@@ -171,6 +171,7 @@
   }
 
   window.addEventListener("unity-loaded", (e) => {
+    console.log("Discord SDK kiaddd");
     unityInstance = e.detail;   // nhận instance từ script thuần
     initDiscord();              // khi Unity sẵn sàng mới khởi chạy Discord
   });

@@ -113,6 +113,19 @@
 
 <script>
   // ✅ Đảm bảo WebAssembly thấy đúng "env.JS_Eval_EvalJS"
+  
+</script>
+
+<script type="module">
+  import {DiscordSDK} from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
+
+  const DISCORD_CLIENT_ID = "1394509133318979746";
+  const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
+
+  var unityInstance = null;
+
+
+  console.log('[MOCK] JS_Eval_EvalJS called with');
   if (!window.Module) window.Module = {};
   if (!Module.imports) Module.imports = {};
   if (!Module.imports.env) Module.imports.env = {};
@@ -121,17 +134,7 @@
     console.log('[MOCK] JS_Eval_EvalJS called with ptr:', ptr);
     return 0;
   };
-</script>
-
-<script type="module">
-  import {DiscordSDK} from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
-
-  const DISCORD_CLIENT_ID = "1394509133318979746";
-  const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
-  await discordSdk.ready();
-
-  var unityInstance = null;
-
+  
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";
   script.onload = () => {

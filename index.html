@@ -134,10 +134,12 @@
 
   var unityInstance = null;
 
-  window.env = window.env || {};
+  window.Module = window.Module || {};
+  window.Module.env = window.Module.env || {};
 
-  window.env.JS_Eval_EvalJS = function(ptr) {
-    console.log("⚙️ JS_Eval_EvalJS was called with ptr:", ptr);
+  // Tạo function giả nếu không dùng thực sự
+  window.Module.env.JS_Eval_EvalJS = function(ptr) {
+    console.log("[Mock] JS_Eval_EvalJS called with pointer:", ptr);
     return 0;
   };
 

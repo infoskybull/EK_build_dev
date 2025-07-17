@@ -131,7 +131,7 @@
   if (!Module.imports.env) Module.imports.env = {};
 
 
-  Module.imports.env.JS_Eval_EvalJS = function(ptr) {
+  Module.imports.env.JS_Eval_EvalJS = function (ptr) {
     console.log('[MOCK] JS_Eval_EvalJS called with ptr:', ptr);
     return 0;
   };
@@ -171,6 +171,10 @@
     // Gửi code sang Unity
     unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
   }
+
+  window.initDiscord = function () {
+    initDiscord();
+  };
 
 </script>
 

@@ -169,10 +169,8 @@
       scopes: ["identify"]
     });
 
-    console.log("int Discord SDK done - send: ", code);
-
     // Gửi code sang Unity
-    unityInstance?.SendMessage("LoginManager", "OnAuthCode", code);
+    unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
   }
 
 </script>

@@ -112,8 +112,14 @@
 </script>
 
 <script>
-  // ✅ Đảm bảo WebAssembly thấy đúng "env.JS_Eval_EvalJS"
+  if (typeof window.Module === 'undefined') {
+    window.Module = {};
+  }
 
+  Module["InitDiscord"] = function () {
+    window.initDiscord();
+    return 1;
+  };
 </script>
 
 <script type="module">
@@ -167,16 +173,7 @@
   document.body.appendChild(script);
 </script>
 
-<script>
-  if (typeof window.Module === 'undefined') {
-    window.Module = {};
-  }
 
-  Module["InitDiscord"] = function () {
-    window.initDiscord();
-    return 1;
-  };
-</script>
 
 </body>
 </html>

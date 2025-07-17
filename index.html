@@ -142,7 +142,9 @@
   }
 
   window.initDiscord = function () {
-    initDiscord();
+    setTimeout(() => {
+      initDiscord().catch(e => console.error("❌ Discord SDK init failed:", e));
+    }, 0);
   };
 
   const script = document.createElement("script");

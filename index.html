@@ -113,6 +113,8 @@
 </script>
 
 
+
+
 <script src=".proxy/Build/EK.loader.js"></script>
 
 <script type="module">
@@ -122,25 +124,25 @@
   const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
 
   var unityInstance = null;
-
-  async function initDiscord() {
-    console.log("await Discord SDK start init");
-    await discordSdk.ready();
-    console.log("Discord SDK ready");
-
-
-    const {code} = await discordSdk.commands.authorize({
-      client_id: DISCORD_CLIENT_ID,
-      response_type: "code",
-      scopes: ["identify"]
-    });
-
-    console.log("Discord SDK init done: ", code);
-    // Gửi code sang Unity
-    unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
-  }
-
-  window.initDiscord = initDiscord;
+  window.DiscordSDK = DiscordSDK;
+  // async function initDiscord() {
+  //   console.log("await Discord SDK start init");
+  //   await discordSdk.ready();
+  //   console.log("Discord SDK ready");
+  //
+  //
+  //   const {code} = await discordSdk.commands.authorize({
+  //     client_id: DISCORD_CLIENT_ID,
+  //     response_type: "code",
+  //     scopes: ["identify"]
+  //   });
+  //
+  //   console.log("Discord SDK init done: ", code);
+  //   // Gửi code sang Unity
+  //   unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
+  // }
+  //
+  // window.initDiscord = initDiscord;
  
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl: ".proxy/Build/EK.data",
@@ -158,7 +160,30 @@
   
 </script>
 
+<script>
+  // gán thủ công để .jslib có thể gọi được
+  window.initDiscord = async function () {
+    const DISCORD_CLIENT_ID = "1394509133318979746";
+    const discordSdk = new window.DiscordSDK(DISCORD_CLIENT_ID);
 
+    console.log("await Discord SDK start init");
+    await discordSdk.ready();
+    console.log("Discord SDK ready");
+
+    const {code} = await discordSdk.commands.authorize({
+      client_id: DISCORD_CLIENT_ID,
+      response_type: "code",
+      scopes: ["identify"]
+    });
+
+    console.log("Discord SDK init done: ", code);
+
+    if (window.unityInstance)
+      window.unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
+    else
+      console.error("❌ unityInstance is not ready yet!");
+  }
+</script>
 
 </body>
 </html>

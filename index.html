@@ -124,19 +124,7 @@
 
   var unityInstance = null;
 
-
-  var Module = {
-    onRuntimeInitialized: function() {
-      console.log("Runtime initialized");
-    },
-    env: {
-      initDiscord: function() {
-        window.initDiscord();
-      }
-    }
-  };
-
-  window.initDiscord = async function () {
+  async function initDiscord() {
     console.log("await Discord SDK start init");
     await discordSdk.ready();
     console.log("Discord SDK ready");
@@ -151,6 +139,10 @@
     console.log("Discord SDK init done: ", code);
     // Gửi code sang Unity
     unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
+  }
+
+  window.initDiscord = function () {
+    initDiscord();
   };
 
   const script = document.createElement("script");
@@ -172,22 +164,7 @@
   };
   document.body.appendChild(script);
 
-  // async function initDiscord() {
-  //   console.log("await Discord SDK start init");
-  //   await discordSdk.ready();
-  //   console.log("Discord SDK ready");
-  //
-  //
-  //   const {code} = await discordSdk.commands.authorize({
-  //     client_id: DISCORD_CLIENT_ID,
-  //     response_type: "code",
-  //     scopes: ["identify"]
-  //   });
-  //
-  //   console.log("Discord SDK init done: ", code);
-  //   // Gửi code sang Unity
-  //   unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
-  // }
+ 
 
   
 

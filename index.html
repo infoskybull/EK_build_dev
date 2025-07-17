@@ -130,9 +130,20 @@
   if (!Module.imports) Module.imports = {};
   if (!Module.imports.env) Module.imports.env = {};
 
+
   Module.imports.env.JS_Eval_EvalJS = function(ptr) {
     console.log('[MOCK] JS_Eval_EvalJS called with ptr:', ptr);
     return 0;
+  };
+
+  if (!window.Module) window.Module = {};
+  if (!Module.imports) Module.imports = {};
+  if (!Module.imports.env) Module.imports.env = {};
+
+  // Cung cấp hàm InitDiscord giả
+  Module.imports.env.InitDiscord = function() {
+    console.log("[MOCK] InitDiscord called.");
+    return 0; // hoặc 1 nếu bạn muốn trả thành công
   };
 
   const script = document.createElement("script");
@@ -150,8 +161,7 @@
       window.unityInstance = instance
       unityInstance = instance;
       console.log("✅ Unity loaded!");
-      console.log("Discord SDK start init");
-      initDiscord();
+     
     }).catch((err) => console.error("❌ Unity load failed:", err));
   };
   document.body.appendChild(script);
@@ -162,13 +172,14 @@
     console.log("Discord SDK ready");
 
 
-    // Yêu cầu người dùng cho phép
     const {code} = await discordSdk.commands.authorize({
       client_id: DISCORD_CLIENT_ID,
       response_type: "code",
       scopes: ["identify"]
     });
 
+    console.log("Discord SDK init done: ", code);
+    
     // Gửi code sang Unity
     unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
   }

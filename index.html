@@ -111,16 +111,6 @@
 
 </script>
 
-<script>
-  if (typeof window.Module === 'undefined') {
-    window.Module = {};
-  }
-
-  Module["InitDiscord"] = function () {
-    window.initDiscord();
-    return 1;
-  };
-</script>
 
 <script type="module">
   import {DiscordSDK} from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";

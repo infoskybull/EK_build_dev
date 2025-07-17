@@ -147,6 +147,12 @@
     }, 0);
   };
 
+  window.Module = window.Module || {};
+  Module["InitDiscord"] = function () {
+    window.initDiscord();
+    return 1;
+  };
+
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";
   script.onload = () => {

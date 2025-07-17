@@ -122,27 +122,36 @@
 
   const DISCORD_CLIENT_ID = "1394509133318979746";
   const discordSdk = new DiscordSDK(DISCORD_CLIENT_ID);
-
   var unityInstance = null;
-  window.DiscordSDK = DiscordSDK;
-  // async function initDiscord() {
-  //   console.log("await Discord SDK start init");
-  //   await discordSdk.ready();
-  //   console.log("Discord SDK ready");
-  //
-  //
-  //   const {code} = await discordSdk.commands.authorize({
-  //     client_id: DISCORD_CLIENT_ID,
-  //     response_type: "code",
-  //     scopes: ["identify"]
-  //   });
-  //
-  //   console.log("Discord SDK init done: ", code);
-  //   // Gửi code sang Unity
-  //   unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
-  // }
-  //
-  // window.initDiscord = initDiscord;
+  async function initDiscord() {
+    console.log("await Discord SDK start init");
+    await discordSdk.ready();
+    console.log("Discord SDK ready");
+
+
+    const {code} = await discordSdk.commands.authorize({
+      client_id: DISCORD_CLIENT_ID,
+      response_type: "code",
+      scopes: ["identify"]
+    });
+
+
+    const waitUntilReady = async () => {
+      for (let i = 0; i < 50; i++) {
+        if (window.isLoginManagerReady && window.unityInstance) {
+          console.log("Discord SDK init done: ", code);
+          window.unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
+          return;
+        }
+        await new Promise(res => setTimeout(res, 100));
+      }
+      console.error("❌ LoginManager is not ready after waiting.");
+    }
+
+    await waitUntilReady();
+  }
+
+  window.initDiscord = initDiscord;
  
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl: ".proxy/Build/EK.data",
@@ -156,33 +165,9 @@
     window.unityInstance = instance
     unityInstance = instance;
     console.log("✅ Unity loaded!");
+    initDiscord();
   }).catch((err) => console.error("❌ Unity load failed:", err));
   
-</script>
-
-<script>
-  // gán thủ công để .jslib có thể gọi được
-  window.initDiscord = async function () {
-    const DISCORD_CLIENT_ID = "1394509133318979746";
-    const discordSdk = new window.DiscordSDK(DISCORD_CLIENT_ID);
-
-    console.log("await Discord SDK start init");
-    await discordSdk.ready();
-    console.log("Discord SDK ready");
-
-    const {code} = await discordSdk.commands.authorize({
-      client_id: DISCORD_CLIENT_ID,
-      response_type: "code",
-      scopes: ["identify"]
-    });
-
-    console.log("Discord SDK init done: ", code);
-
-    if (window.unityInstance)
-      window.unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
-    else
-      console.error("❌ unityInstance is not ready yet!");
-  }
 </script>
 
 </body>

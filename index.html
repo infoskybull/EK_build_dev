@@ -146,7 +146,7 @@
   }
 
   window.initDiscord = initDiscord;
-
+ 
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl: ".proxy/Build/EK.data",
     frameworkUrl: ".proxy/Build/EK.framework.js",
@@ -161,7 +161,7 @@
     console.log("✅ Unity loaded!");
     initDiscord();
   }).catch((err) => console.error("❌ Unity load failed:", err));
-
+  
 </script>
 
 </body>

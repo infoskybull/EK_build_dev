@@ -108,9 +108,12 @@
     // config.devicePixelRatio = 1;
 
     document.querySelector("#unity-loading-bar").style.display = "block";
+  }
 
 </script>
 
+
+<script src=".proxy/Build/EK.loader.js"></script>
 
 <script type="module">
   import {DiscordSDK} from "https://cdn.jsdelivr.net/npm/@discord/embedded-app-sdk@latest/+esm";
@@ -137,30 +140,22 @@
     unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
   }
 
-  window.initDiscord = function () {
-    setTimeout(() => {
-      initDiscord().catch(e => console.error("❌ Discord SDK init failed:", e));
-    }, 0);
-  };
-
-  const script = document.createElement("script");
-  script.src = ".proxy/Build/EK.loader.js";
-  script.onload = () => {
-    createUnityInstance(document.querySelector("#unity-canvas"), {
-      dataUrl: ".proxy/Build/EK.data",
-      frameworkUrl: ".proxy/Build/EK.framework.js",
-      codeUrl: ".proxy/Build/EK.wasm",
-      streamingAssetsUrl: ".proxy/StreamingAssets",
-      companyName: "Skybull",
-      productName: "Eternal Kings",
-      productVersion: "0.1",
-    }).then((instance) => {
-      window.unityInstance = instance
-      unityInstance = instance;
-      console.log("✅ Unity loaded!");
-    }).catch((err) => console.error("❌ Unity load failed:", err));
-  };
-  document.body.appendChild(script);
+  window.initDiscord = initDiscord;
+ 
+  createUnityInstance(document.querySelector("#unity-canvas"), {
+    dataUrl: ".proxy/Build/EK.data",
+    frameworkUrl: ".proxy/Build/EK.framework.js",
+    codeUrl: ".proxy/Build/EK.wasm",
+    streamingAssetsUrl: ".proxy/StreamingAssets",
+    companyName: "Skybull",
+    productName: "Eternal Kings",
+    productVersion: "0.1",
+  }).then((instance) => {
+    window.unityInstance = instance
+    unityInstance = instance;
+    console.log("✅ Unity loaded!");
+  }).catch((err) => console.error("❌ Unity load failed:", err));
+  
 </script>
 
 

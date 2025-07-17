@@ -131,13 +131,15 @@
 
 
     const waitUntilReady = async () => {
-      for (let i = 0; i < 50; i++) {
+      const maxTries = 200; // số lần thử
+      const delayMs = 500;  // mỗi lần đợi 100ms
+      for (let i = 0; i < maxTries; i++) {
         if (window.isLoginManagerReady && window.unityInstance) {
           console.log("Discord SDK init done: ", code);
           window.unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
           return;
         }
-        await new Promise(res => setTimeout(res, 100));
+        await new Promise(res => setTimeout(res, delayMs));
       }
       console.error("❌ LoginManager is not ready after waiting.");
     }
@@ -146,7 +148,7 @@
   }
 
   window.initDiscord = initDiscord;
- 
+
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl: ".proxy/Build/EK.data",
     frameworkUrl: ".proxy/Build/EK.framework.js",
@@ -161,7 +163,7 @@
     console.log("✅ Unity loaded!");
     initDiscord();
   }).catch((err) => console.error("❌ Unity load failed:", err));
-  
+
 </script>
 
 </body>

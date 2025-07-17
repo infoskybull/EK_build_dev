@@ -132,7 +132,7 @@
 
     const waitUntilReady = async () => {
       const maxTries = 200; // số lần thử
-      const delayMs = 500;  // mỗi lần đợi 100ms
+      const delayMs = 100;  // mỗi lần đợi 100ms
       for (let i = 0; i < maxTries; i++) {
         if (window.isLoginManagerReady && window.unityInstance) {
           console.log("Discord SDK init done: ", code);
@@ -140,6 +140,7 @@
           return;
         }
         await new Promise(res => setTimeout(res, delayMs));
+        console.log("wait for login manager");
       }
       console.error("❌ LoginManager is not ready after waiting.");
     }

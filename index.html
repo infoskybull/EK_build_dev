@@ -147,12 +147,6 @@
     }, 0);
   };
 
-  window.Module = window.Module || {};
-  Module["InitDiscord"] = function () {
-    window.initDiscord();
-    return 1;
-  };
-
   const script = document.createElement("script");
   script.src = ".proxy/Build/EK.loader.js";
   script.onload = () => {
@@ -171,11 +165,17 @@
     }).catch((err) => console.error("❌ Unity load failed:", err));
   };
   document.body.appendChild(script);
+</script>
 
- 
+<script>
+  if (typeof window.Module === 'undefined') {
+    window.Module = {};
+  }
 
-  
-
+  Module["InitDiscord"] = function () {
+    window.initDiscord();
+    return 1;
+  };
 </script>
 
 </body>

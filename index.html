@@ -36,6 +36,47 @@
       width: 100%;
       height: 100%;
     }
+
+    #unity-loading-background{
+      width: 100%;
+      height: 100%;
+      background: url('Loading.png') no-repeat center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    #unity-loading-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      position: absolute;
+      bottom: 40px;
+      left: 0;
+      width: 100%;
+      height: 120px; /* Adjust as needed for your loading bar height */
+      pointer-events: none;
+      z-index: 999;
+      background: transparent;
+    }
+
+    #unity-progress-bar-empty {
+      width: 60%;
+      height: 18px;
+      margin-top: 10px;
+      background: url('loading_empty.png') no-repeat center;
+    }
+
+    #unity-progress-bar-full {
+      width: 0%;
+      height: 18px;
+      background: url('loading_full.png') no-repeat center;
+    }
   </style>
 
 </head>
@@ -44,10 +85,11 @@
   <div id="unity-wrapper">
     <canvas id="unity-canvas"></canvas>
   </div>
-  <div id="unity-loading-bar">
-    <div id="unity-logo"></div>
-    <div id="unity-progress-bar-empty">
-      <div id="unity-progress-bar-full"></div>
+  <div id="unity-loading-background">
+    <div id="unity-loading-bar">
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -146,6 +188,13 @@
   }
 
   window.initDiscord = initDiscord;
+
+  const loadingContainer = document.getElementById("unity-loading-background");
+  const progressFull = document.getElementById("unity-progress-bar-full");
+  const progressEmpty = document.getElementById("unity-progress-bar-empty");
+  window.DisableLoading = function() {
+    loadingContainer.style.display = "none";
+  }
  
   createUnityInstance(document.querySelector("#unity-canvas"), {
     dataUrl: ".proxy/Build/EK.data",
@@ -155,6 +204,8 @@
     companyName: "Skybull",
     productName: "Eternal Kings",
     productVersion: "0.1",
+  }, (progress) => {
+    progressFull.style.width = Math.round(progress * 100) + "%";
   }).then((instance) => {
     window.unityInstance = instance
     unityInstance = instance;

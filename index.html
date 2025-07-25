@@ -187,7 +187,12 @@
     await waitUntilReady();
   }
 
+  async function buyItem(itemId) {
+    await discordSdk.commands.startPurchase({sku_id: itemId});
+  }
+
   window.initDiscord = initDiscord;
+  window.buyItem = buyItem;
 
   const loadingContainer = document.getElementById("unity-loading-background");
   const progressFull = document.getElementById("unity-progress-bar-full");

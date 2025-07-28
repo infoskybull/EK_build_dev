@@ -113,7 +113,7 @@
     const {code} = await discordSdk.commands.authorize({
       client_id: DISCORD_CLIENT_ID,
       response_type: "code",
-      scopes: ["identify", "rpc.store.read", "rpc.activities.write"]
+      scopes: ["identify", "rpc.store.read"]
     });
 
 
@@ -137,7 +137,7 @@
   }
 
   window.initDiscord = initDiscord;
-  
+
   window.buyItem = async function(itemId) {
     await discordSdk.commands.startPurchase({sku_id: itemId});
   }

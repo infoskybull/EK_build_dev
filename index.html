@@ -111,16 +111,18 @@
 
 
     const cachedCode = localStorage.getItem("discord_auth_code");
+    let codeAuth;
 
     if (cachedCode) {
       console.log("✅ Reusing cached code:", cachedCode);
-    } 
+    }
     else {
       const { code } = await discordSdk.commands.authorize({
         client_id: DISCORD_CLIENT_ID,
         response_type: "code",
         scopes: ["identify"],
       });
+      codeAuth = code;
       localStorage.setItem("discord_auth_code", code);
     }
 
@@ -133,8 +135,8 @@
             window.unityInstance.SendMessage("LoginManager", "OnAuthCode", cachedCode);
           }
           else {
-            console.log("Discord SDK init done: ", code);
-            window.unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
+            console.log("Discord SDK init done: ", codeAuth);
+            window.unityInstance.SendMessage("LoginManager", "OnAuthCode", codeAuth);
           }
           return;
         }
@@ -151,7 +153,7 @@
   }
 
   window.initDiscord = initDiscord;
-  
+
   window.buyItem = async function(itemId) {
     await discordSdk.commands.startPurchase({sku_id: itemId});
   }

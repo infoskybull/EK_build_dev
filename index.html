@@ -110,21 +110,34 @@
     console.log("Discord SDK ready");
 
 
-    let codeAuth;
+    // const cachedCode = localStorage.getItem("discord_auth_code");
+    // let codeAuth;
+    //
+    // if (cachedCode) {
+    //   console.log("✅ Reusing cached code:", cachedCode);
+    // } 
+    // else {
+    //     const { code } = await discordSdk.commands.authorize({
+    //     client_id: DISCORD_CLIENT_ID,
+    //     response_type: "code",
+    //     scopes: ["identify"],
+    //   });
+    //   codeAuth = code;
+    //   localStorage.setItem("discord_auth_code", code);
+    // }
+
 
     const { code } = await discordSdk.commands.authorize({
       client_id: DISCORD_CLIENT_ID,
       response_type: "code",
       scopes: ["identify"],
     });
-    codeAuth = code;
-
 
     const waitUntilReady = async () => {
       for (let i = 0; i < 100; i++) {
         if (window.isLoginManagerReady && window.unityInstance) {
-          console.log("Discord SDK init done: ", codeAuth);
-          window.unityInstance.SendMessage("LoginManager", "OnAuthCode", codeAuth);
+            console.log("Discord SDK init done: ", code);
+            window.unityInstance.SendMessage("LoginManager", "OnAuthCode", code);
           return;
         }
         await new Promise(res => setTimeout(res, 100));

@@ -129,51 +129,50 @@
 
 <script>
   const canvas   = document.getElementById('unity-container');
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   const ASPECT   = 9/16;      // 16:9 (width/height)
 
-  /* Lấy khoảng trống safe-area */
-  function safeInsets(){
-    const cs = getComputedStyle(document.documentElement);
-    const sa = {
-      top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
-      right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
-      bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
-      left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
-    };
-    if(window.visualViewport){
-      const vv = window.visualViewport;
-      sa.top    = Math.max(sa.top   , vv.offsetTop);
-      sa.left   = Math.max(sa.left  , vv.offsetLeft);
-      sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
-      sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-    }
-    return sa;
-  }
+  // /* Lấy khoảng trống safe-area */
+  // function safeInsets(){
+  //   const cs = getComputedStyle(document.documentElement);
+  //   const sa = {
+  //     top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
+  //     right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
+  //     bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
+  //     left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
+  //   };
+  //   if(window.visualViewport){
+  //     const vv = window.visualViewport;
+  //     sa.top    = Math.max(sa.top   , vv.offsetTop);
+  //     sa.left   = Math.max(sa.left  , vv.offsetLeft);
+  //     sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
+  //     sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
+  //   }
+  //   return sa;
+  // }
 
   function resizeCanvas(){
-    const {top,right,bottom,left} = safeInsets();
-    const safeW = window.innerWidth  - left - right;
-    const safeH = window.innerHeight - top  - bottom;
+    //const {top,right,bottom,left} = safeInsets();
+    const safeW = window.innerWidth ;
+    const safeH = window.innerHeight ;
 
-    if(isMobile){
-      /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-      canvas.style.width  = `${safeW}px`;
-      canvas.style.height = `${safeH}px`;
-    }else{
+    // if(isMobile){
+    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+    //   canvas.style.width  = `${safeW}px`;
+    //   canvas.style.height = `${safeH}px`;
+    // }else{
       /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
-      const currentAspect = safeW / safeH;
-      let w,h;
-      if(currentAspect > ASPECT){      // cửa sổ quá rộng
-        h = safeH;
-        w = h * ASPECT;
-      }else{                           // cửa sổ quá cao
-        w = safeW;
-        h = w / ASPECT;
-      }
-      canvas.style.width  = `${w}px`;
-      canvas.style.height = `${h}px`;
+    const currentAspect = safeW / safeH;
+    let w,h;
+    if(currentAspect > ASPECT){      // cửa sổ quá rộng
+      h = safeH;
+      w = h * ASPECT;
+    }else{                           // cửa sổ quá cao
+      w = safeW;
+      h = w / ASPECT;
     }
+    canvas.style.width  = `${w}px`;
+    canvas.style.height = `${h}px`;
+    //}
   }
 
   /* Gọi khi tải & khi đổi kích thước */

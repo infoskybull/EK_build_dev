@@ -10,28 +10,6 @@
   <script src="https://unpkg.com/@tonconnect/ui@2.1.0/dist/tonconnect-ui.min.js"></script>
   <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
   <style>
-    @media screen and (orientation:landscape) {
-      body::before {
-        content: "Please rotate your device to portrait mode.";
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        background: #000;
-        color: white;
-        font-size: 2em;
-        text-align: center;
-        z-index: 9999;
-      }
-      #unity-canvas {
-        display: none !important;
-      }
-    }
-  </style>
-
-  <style>
     html, body {
       margin: 0;
       padding: 0;
@@ -266,7 +244,7 @@
     //manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
     testnet: true
   });
- 
+
   async function testJavaScriptFunction(recipientAddress, amount) {
     console.error("Unity says: " + recipientAddress + "_____" + amount);
 

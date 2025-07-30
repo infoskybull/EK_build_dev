@@ -81,7 +81,7 @@
       width: 100%; /* giữ nguyên, nhưng sẽ bị cắt bởi scaleX */
       height: 100%;
       background: url('loading_full.png') no-repeat left center;
-      background-size: 100% 100%;
+      background-size: contain;
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 0.2s ease-out;
@@ -118,9 +118,9 @@
 
   <div id="unity-loading-background">
     <div id="unity-loading-bar">
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-full"></div>
-      </div>
+      <div id="unity-progress-bar-empty"></div>
+      <div id="unity-progress-bar-full"></div>
+      
     </div>
   </div>
 </div>

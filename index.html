@@ -69,19 +69,20 @@
       height: 30px;
       margin: 10px auto 0 auto;
       background: url('loading_empty.png') no-repeat center;
-      background-size: contain;
+      background-size: cover;
       overflow: hidden;
       position: relative;
     }
 
     #unity-progress-bar-full {
-      width: 240px; /* giữ nguyên, nhưng sẽ bị cắt bởi scaleX */
-      height: 30px;
-      margin: 10px auto 0 auto;
-      background: url('loading_full.png') no-repeat center;
-      background-size: contain;
-      overflow: hidden;
-      transform: scaleX(0);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%; /* sẽ bị scale theo chiều ngang */
+      height: 100%;
+      background: url('loading_full.png') no-repeat left center;
+      background-size: cover;
+      transform: scaleX(0); /* bắt đầu từ 0 */
       transform-origin: left;
       transition: transform 0.2s ease-out;
     }
@@ -117,8 +118,9 @@
 
   <div id="unity-loading-background">
     <div id="unity-loading-bar">
-      <div id="unity-progress-bar-empty"></div>
-      <div id="unity-progress-bar-full"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
       
     </div>
   </div>

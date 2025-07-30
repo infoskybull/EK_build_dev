@@ -65,21 +65,21 @@
     }
 
     #unity-progress-bar-empty {
-      width: 100%;
+      width: 240px; /* hoặc 60% nếu bạn muốn responsive */
       height: 18px;
-      margin: 10px auto 0 auto; /* 👈 Căn giữa theo chiều ngang */
+      margin: 10px auto 0 auto;
       background: url('loading_empty.png') no-repeat center;
-      background-size: contain; /* đảm bảo ảnh không bị vỡ */
+      background-size: contain;
+      overflow: hidden; /* 👈 Cần để crop phần full theo chiều rộng */
       position: relative;
     }
 
     #unity-progress-bar-full {
       width: 0%;
-      height: 18px;
-      margin: 10px auto 0 auto;
-      background: url('loading_full.png') no-repeat center;
+      height: 100%;
+      background: url('loading_full.png') no-repeat left;
       background-size: contain;
-      position: relative;
+      transition: width 0.2s ease-out; /* hiệu ứng mượt hơn */
     }
   </style>
 
@@ -227,7 +227,8 @@
   script.src = loaderUrl;
   script.onload = () => {
     createUnityInstance(canvas1, config, (progress) => {
-      progressFull.style.width = Math.round(progress * 100) + "%";
+      progressFull.style.transition = "width 0.2s ease-out";
+      progressFull.style.width = `${Math.round(progress * 100)}%`;
     }).then((unityInstance) => {
       document.querySelector("#unity-loading-bar").style.display = "none";
       unityInstanceGlobal = unityInstance;

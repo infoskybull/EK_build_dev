@@ -235,7 +235,6 @@
     createUnityInstance(canvas1, config, (progress) => {
       progressFull.style.transform = `scaleX(${progress})`;
     }).then((unityInstance) => {
-      document.querySelector("#unity-loading-bar").style.display = "none";
       unityInstanceGlobal = unityInstance;
     }).catch((message) => {
       alert(message);

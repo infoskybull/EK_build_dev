@@ -75,12 +75,13 @@
     }
 
     #unity-progress-bar-full {
-      margin: 10px auto 0 auto;
       width: 240px; /* giữ nguyên, nhưng sẽ bị cắt bởi scaleX */
       height: 30px;
+      margin: 10px auto 0 auto;
       background: url('loading_full.png') no-repeat left center;
       background-size: contain;
       transform: scaleX(0);
+      transform-origin: left;
       transition: transform 0.2s ease-out;
     }
   </style>

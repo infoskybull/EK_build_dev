@@ -136,58 +136,52 @@
 
 <script>
   const canvas   = document.getElementById('unity-container');
-  const ASPECT   = 9/16;      // 16:9 (width/height)
+  const ASPECT   = 9/16; // 16:9
 
-  // /* Lấy khoảng trống safe-area */
-  // function safeInsets(){
-  //   const cs = getComputedStyle(document.documentElement);
-  //   const sa = {
-  //     top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
-  //     right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
-  //     bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
-  //     left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
-  //   };
-  //   if(window.visualViewport){
-  //     const vv = window.visualViewport;
-  //     sa.top    = Math.max(sa.top   , vv.offsetTop);
-  //     sa.left   = Math.max(sa.left  , vv.offsetLeft);
-  //     sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
-  //     sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-  //   }
-  //   return sa;
-  // }
+  let keyboardOpen = false;
 
   function resizeCanvas(){
-    //const {top,right,bottom,left} = safeInsets();
-    const safeW = window.innerWidth ;
-    const safeH = window.innerHeight ;
+    if (keyboardOpen) return; // Bỏ qua nếu bàn phím đang mở
 
-    // if(isMobile){
-    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-    //   canvas.style.width  = `${safeW}px`;
-    //   canvas.style.height = `${safeH}px`;
-    // }else{
-    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
+    const safeW = window.innerWidth;
+    const safeH = window.innerHeight;
+
     const currentAspect = safeW / safeH;
-    let w,h;
-    if(currentAspect > ASPECT){      // cửa sổ quá rộng
+    let w, h;
+    if (currentAspect > ASPECT) { // cửa sổ quá rộng
       h = safeH;
       w = h * ASPECT;
-    }else{                           // cửa sổ quá cao
+    } else { // cửa sổ quá cao
       w = safeW;
       h = w / ASPECT;
     }
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
-    //}
   }
 
-  /* Gọi khi tải & khi đổi kích thước */
+  /* Gọi khi tải */
   resizeCanvas();
+
+  /* Resize khi xoay hoặc đổi kích thước */
   window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', resizeCanvas);
+
+  /* Detect bàn phím trên mobile */
+  if (window.visualViewport) {
+    let initialHeight = window.visualViewport.height;
+
+    window.visualViewport.addEventListener('resize', () => {
+      const ratio = window.visualViewport.height / initialHeight;
+
+      if (ratio < 0.85) {
+        // Bàn phím mở
+        keyboardOpen = true;
+      } else {
+        // Bàn phím đóng
+        keyboardOpen = false;
+        resizeCanvas();
+      }
+    });
   }
 </script>
 
@@ -306,56 +300,7 @@
   }
 </script>
 
-<script>
-  const canvas   = document.getElementById('unity-container');
-  const ASPECT   = 9/16; // 16:9
 
-  let keyboardOpen = false;
-
-  function resizeCanvas(){
-    if (keyboardOpen) return; // Bỏ qua nếu bàn phím đang mở
-
-    const safeW = window.innerWidth;
-    const safeH = window.innerHeight;
-
-    const currentAspect = safeW / safeH;
-    let w, h;
-    if (currentAspect > ASPECT) { // cửa sổ quá rộng
-      h = safeH;
-      w = h * ASPECT;
-    } else { // cửa sổ quá cao
-      w = safeW;
-      h = w / ASPECT;
-    }
-    canvas.style.width  = `${w}px`;
-    canvas.style.height = `${h}px`;
-  }
-
-  /* Gọi khi tải */
-  resizeCanvas();
-
-  /* Resize khi xoay hoặc đổi kích thước */
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('orientationchange', resizeCanvas);
-
-  /* Detect bàn phím trên mobile */
-  if (window.visualViewport) {
-    let initialHeight = window.visualViewport.height;
-
-    window.visualViewport.addEventListener('resize', () => {
-      const ratio = window.visualViewport.height / initialHeight;
-
-      if (ratio < 0.85) {
-        // Bàn phím mở
-        keyboardOpen = true;
-      } else {
-        // Bàn phím đóng
-        keyboardOpen = false;
-        resizeCanvas();
-      }
-    });
-  }
-</script>
 
 </body>
 </html>

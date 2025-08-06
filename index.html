@@ -136,51 +136,51 @@
 
 <script>
   const canvas   = document.getElementById('unity-container');
-  const ASPECT   = 9/16; // 16:9
-
-  let keyboardOpen = false;
+  const ASPECT   = 9/16;      // 16:9 (width/height)
 
   function resizeCanvas(){
-    if (keyboardOpen) return; // Bỏ qua nếu bàn phím đang mở
+    //const {top,right,bottom,left} = safeInsets();
+    const safeW = window.innerWidth ;
+    const safeH = window.innerHeight ;
 
-    const safeW = window.innerWidth;
-    const safeH = window.innerHeight;
-
+    // if(isMobile){
+    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+    //   canvas.style.width  = `${safeW}px`;
+    //   canvas.style.height = `${safeH}px`;
+    // }else{
+    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
     const currentAspect = safeW / safeH;
-    let w, h;
-    if (currentAspect > ASPECT) { // cửa sổ quá rộng
+    let w,h;
+    if(currentAspect > ASPECT){      // cửa sổ quá rộng
       h = safeH;
       w = h * ASPECT;
-    } else { // cửa sổ quá cao
+    }else{                           // cửa sổ quá cao
       w = safeW;
       h = w / ASPECT;
     }
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
+    //}
   }
 
-  /* Gọi khi tải */
+  /* Gọi khi tải & khi đổi kích thước */
   resizeCanvas();
-
-  /* Resize khi xoay hoặc đổi kích thước */
-  window.addEventListener('resize', resizeCanvas);
+  //window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
-
-  /* Detect bàn phím trên mobile */
   if (window.visualViewport) {
-    let initialHeight = window.visualViewport.height;
+    let initialHeight = window.innerHeight;
 
     window.visualViewport.addEventListener('resize', () => {
+      // Tỷ lệ so với chiều cao ban đầu
       const ratio = window.visualViewport.height / initialHeight;
 
-      if (ratio < 0.55) {
-        // Bàn phím mở
-        keyboardOpen = true;
-      } else {
-        // Bàn phím đóng
-        keyboardOpen = false;
-        resizeCanvas();
+      // Nếu nhỏ hơn 0.85 nghĩa là bàn phím đang mở
+      if (ratio < 0.85) {
+        return; // bỏ qua resize khi bàn phím mở
       }
+
+      // Khi bàn phím đóng thì mới resize lại
+      resizeCanvas();
     });
   }
 </script>

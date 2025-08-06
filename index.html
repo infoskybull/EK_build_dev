@@ -168,18 +168,16 @@
   //window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
   if (window.visualViewport) {
-    let initialHeight = window.innerHeight;
-
     window.visualViewport.addEventListener('resize', () => {
-      // Tỷ lệ so với chiều cao ban đầu
-      const ratio = window.visualViewport.height / initialHeight;
+      // Chênh lệch giữa viewport height và window height
+      const diff = window.innerHeight - window.visualViewport.height;
 
-      // Nếu nhỏ hơn 0.85 nghĩa là bàn phím đang mở
-      if (ratio < 0.85) {
-        return; // bỏ qua resize khi bàn phím mở
+      // Nếu chênh lệch > 150px → bàn phím đang mở → không resize
+      if (diff > 150) {
+        return;
       }
 
-      // Khi bàn phím đóng thì mới resize lại
+      // Ngược lại → resize bình thường
       resizeCanvas();
     });
   }

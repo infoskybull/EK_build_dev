@@ -250,6 +250,27 @@
   document.body.appendChild(script);
 
 </script>
+
+<script>
+  // Hàm này sẽ chạy liên tục để ẩn input do Unity tạo
+  const hideUnityInput = () => {
+    const inputs = document.querySelectorAll("input, textarea");
+    inputs.forEach(el => {
+      if (!el.classList.contains("realInput")) { // tránh ẩn input thật của web
+        el.style.opacity = "0";
+        el.style.position = "absolute";
+        el.style.pointerEvents = "none";
+        el.style.height = "0";
+        el.style.width = "0";
+      }
+    });
+  };
+
+  // Quan sát DOM để ẩn ngay khi Unity tạo input mới
+  const observer = new MutationObserver(hideUnityInput);
+  observer.observe(document.body, { childList: true, subtree: true });
+</script>
+
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
     //stagging

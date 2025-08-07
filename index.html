@@ -267,5 +267,17 @@
   });
 </script>
 
+<script>
+  document.addEventListener('focusin', (e) => {
+    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+      document.getElementById("unity-container").style.zIndex = "0";
+    }
+  });
+
+  document.addEventListener('focusout', () => {
+    document.getElementById("unity-container").style.zIndex = "1";
+  });
+</script>
+
 </body>
 </html>

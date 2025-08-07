@@ -233,21 +233,45 @@
   }
 </script>
 
-<!--<script>-->
-<!--  // Khi user ấn vào canvas Unity, tìm input mà Unity tạo và focus vào-->
-<!--  document.getElementById("unity-canvas").addEventListener("pointerdown", () => {-->
-<!--    setTimeout(() => {-->
-<!--      const input = document.querySelector("input:not(.realInput), textarea:not(.realInput)");-->
-<!--      if (input) {-->
-<!--        input.style.opacity = "1";-->
-<!--        input.style.position = "absolute";-->
-<!--        input.style.zIndex = "9999";-->
-<!--        input.style.fontSize = "16px";-->
-<!--        input.focus();-->
-<!--      }-->
-<!--    }, 100); // delay nhẹ để đảm bảo Unity đã thêm input-->
-<!--  });-->
-<!--</script>-->
+<script>
+  function autoFocusUnityInputWhenCreated() {
+    const observer = new MutationObserver(() => {
+      const input = document.querySelector("input:not(.realInput), textarea:not(.realInput)");
+      if (input) {
+        // Đặt lại style đảm bảo nó hiển thị để bàn phím được phép hiện
+        input.style.opacity = "0.01";
+        input.style.position = "absolute";
+        input.style.top = "10px"; // Vị trí bất kỳ nhưng không bị đè
+        input.style.left = "10px";
+        input.style.zIndex = "10000";
+        input.style.width = "1px";
+        input.style.height = "1px";
+        input.style.fontSize = "16px"; // bắt buộc cho Android
+
+        // Tự động focus nếu chưa được focus
+        setTimeout(() => {
+          if (document.activeElement !== input) {
+            input.focus();
+          }
+        }, 50);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+
+  // Khi tap vào Unity thì chắc chắn gọi thử lại focus (dự phòng)
+  document.getElementById("unity-canvas").addEventListener("pointerdown", () => {
+    setTimeout(() => {
+      const input = document.querySelector("input:not(.realInput), textarea:not(.realInput)");
+      if (input) {
+        input.focus();
+      }
+    }, 100);
+  });
+
+  autoFocusUnityInputWhenCreated();
+</script>
 
 
 </body>

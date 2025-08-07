@@ -94,13 +94,13 @@
       top: 0 !important;
       width: 1px !important;
       height: 1px !important;
-      font-size: 16px !important; /* quan trọng cho Android */
+      font-size: 16px !important; /* bắt buộc để Android mở bàn phím */
       color: transparent !important;
       background-color: transparent !important;
       border: none !important;
       outline: none !important;
       caret-color: transparent !important;
-      z-index: 1000 !important;
+      z-index: 9999 !important;
     }
 
   </style>
@@ -249,6 +249,31 @@
       console.error("❌ Transaction rejected or failed:", err);
     }
   }
+</script>
+
+<script>
+  const hideUnityInputSmart = () => {
+    document.querySelectorAll("input, textarea").forEach(el => {
+      if (!el.classList.contains("realInput")) {
+        el.style.position = "absolute";
+        el.style.left = "0";
+        el.style.top = "0";
+        el.style.width = "1px";
+        el.style.height = "1px";
+        el.style.fontSize = "16px";
+        el.style.backgroundColor = "transparent";
+        el.style.color = "transparent";
+        el.style.border = "none";
+        el.style.outline = "none";
+        el.style.caretColor = "transparent";
+        el.style.zIndex = "9999";
+      }
+    });
+  };
+
+  const observer = new MutationObserver(hideUnityInputSmart);
+  observer.observe(document.body, { childList: true, subtree: true });
+  setInterval(hideUnityInputSmart, 300); // đảm bảo fix khi Unity gán lại
 </script>
 
 <script>

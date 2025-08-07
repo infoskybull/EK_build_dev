@@ -87,23 +87,23 @@
       transition: transform 0.2s ease-out;
     }
 
-    /*#unity-container input,*/
-    /*#unity-container textarea {*/
-    /*  position: absolute !important;*/
-    /*  left: -9999px !important;    !* đưa ra khỏi màn hình *!*/
-    /*  top: -9999px !important;*/
-    /*  width: 1px !important;*/
-    /*  height: 1px !important;*/
-    /*  font-size: 16px !important;  !* BẮT BUỘC để Android hiện bàn phím *!*/
-    /*  background: transparent !important;*/
-    /*  color: transparent !important;*/
-    /*  caret-color: transparent !important;*/
-    /*  border: none !important;*/
-    /*  outline: none !important;*/
-    /*  pointer-events: auto !important;*/
-    /*  opacity: 1 !important;*/
-    /*  z-index: 0 !important;*/
-    /*}*/
+    #unity-container input,
+    #unity-container textarea {
+      position: absolute !important;
+      left: -9999px !important;
+      top: 0 !important;
+      width: 1px !important;
+      height: 1px !important;
+      font-size: 16px !important;
+      background: transparent !important;
+      color: transparent !important;
+      caret-color: transparent !important;
+      border: none !important;
+      outline: none !important;
+      pointer-events: auto !important;
+      opacity: 1 !important;  /* giữ ở 1 để Android detect */
+      z-index: 0 !important;
+    }
 
   </style>
 
@@ -262,6 +262,25 @@
 <!--  observer.observe(document.body, { childList: true, subtree: true });-->
 <!--  setInterval(fixUnityInputForAndroid, 300); // giữ chắc chắn luôn đúng trên Android-->
 <!--</script>-->
+
+
+<script>
+  const adjustCanvasZIndex = () => {
+    const inputs = document.querySelectorAll("input, textarea");
+    inputs.forEach(input => {
+      input.addEventListener("focus", () => {
+        document.getElementById("unity-container").style.zIndex = "0";
+      });
+      input.addEventListener("blur", () => {
+        document.getElementById("unity-container").style.zIndex = "1";
+      });
+    });
+  };
+
+  const observer = new MutationObserver(adjustCanvasZIndex);
+  observer.observe(document.body, { childList: true, subtree: true });
+  setInterval(adjustCanvasZIndex, 500);
+</script>
 
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({

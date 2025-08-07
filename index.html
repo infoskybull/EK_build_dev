@@ -277,20 +277,20 @@
   setInterval(keepUnityInputsAlive, 500);
 </script>
 
-<!--<script>-->
-<!--  function fixZIndexOnInputFocus() {-->
-<!--    const unityContainer = document.getElementById('unity-container');-->
-<!--    document.addEventListener('focusin', (e) => {-->
-<!--      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {-->
-<!--        unityContainer.style.zIndex = "0";-->
-<!--      }-->
-<!--    });-->
-<!--    document.addEventListener('focusout', () => {-->
-<!--      unityContainer.style.zIndex = "1";-->
-<!--    });-->
-<!--  }-->
-<!--  fixZIndexOnInputFocus();-->
-<!--</script>-->
+<script>
+  function fixZIndexOnInputFocus() {
+    const unityContainer = document.getElementById('unity-container');
+    document.addEventListener('focusin', (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+        unityContainer.style.zIndex = "0";
+      }
+    });
+    document.addEventListener('focusout', () => {
+      unityContainer.style.zIndex = "1";
+    });
+  }
+  fixZIndexOnInputFocus();
+</script>
 
 
 </body>

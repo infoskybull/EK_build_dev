@@ -89,20 +89,7 @@
 
     #unity-container input,
     #unity-container textarea {
-      position: absolute !important;
-      left: -9999px !important;
-      top: 0 !important;
-      width: 1px !important;
-      height: 1px !important;
       font-size: 16px !important;
-      background: transparent !important;
-      color: transparent !important;
-      caret-color: transparent !important;
-      border: none !important;
-      outline: none !important;
-      pointer-events: auto !important;
-      opacity: 1 !important;  /* giữ ở 1 để Android detect */
-      z-index: 0 !important;
     }
 
   </style>
@@ -236,50 +223,19 @@
 
 </script>
 
-<!--<script>-->
-<!--  function fixUnityInputForAndroid() {-->
-<!--    document.querySelectorAll("input, textarea").forEach(el => {-->
-<!--      if (!el.classList.contains("realInput")) {-->
-<!--        el.style.position = "absolute";-->
-<!--        el.style.left = "-9999px";-->
-<!--        el.style.top = "-9999px";-->
-<!--        el.style.width = "1px";-->
-<!--        el.style.height = "1px";-->
-<!--        el.style.fontSize = "16px";-->
-<!--        el.style.background = "transparent";-->
-<!--        el.style.color = "transparent";-->
-<!--        el.style.caretColor = "transparent";-->
-<!--        el.style.border = "none";-->
-<!--        el.style.outline = "none";-->
-<!--        el.style.pointerEvents = "auto";-->
-<!--        el.style.opacity = "1";-->
-<!--        el.style.zIndex = "0";-->
-<!--      }-->
-<!--    });-->
-<!--  }-->
-
-<!--  const observer = new MutationObserver(fixUnityInputForAndroid);-->
-<!--  observer.observe(document.body, { childList: true, subtree: true });-->
-<!--  setInterval(fixUnityInputForAndroid, 300); // giữ chắc chắn luôn đúng trên Android-->
-<!--</script>-->
 
 
 <script>
-  const adjustCanvasZIndex = () => {
-    const inputs = document.querySelectorAll("input, textarea");
-    inputs.forEach(input => {
-      input.addEventListener("focus", () => {
-        document.getElementById("unity-container").style.zIndex = "0";
-      });
-      input.addEventListener("blur", () => {
-        document.getElementById("unity-container").style.zIndex = "1";
-      });
+  function fixZIndexOnFocus() {
+    const container = document.getElementById('unity-container');
+    document.addEventListener('focusin', () => {
+      container.style.zIndex = '0';
     });
-  };
-
-  const observer = new MutationObserver(adjustCanvasZIndex);
-  observer.observe(document.body, { childList: true, subtree: true });
-  setInterval(adjustCanvasZIndex, 500);
+    document.addEventListener('focusout', () => {
+      container.style.zIndex = '1';
+    });
+  }
+  fixZIndexOnFocus();
 </script>
 
 <script>

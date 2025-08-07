@@ -88,25 +88,6 @@
     }
   </style>
 
-  <style>
-    input:not(.realInput), textarea:not(.realInput) {
-      position: absolute !important;
-      top: 0 !important;
-      left: 0 !important;
-      width: 100% !important;
-      height: 40px !important;
-      font-size: 16px !important;
-      opacity: 0 !important;
-      background-color: transparent !important;
-      color: transparent !important;
-      border: none !important;
-      outline: none !important;
-      caret-color: transparent !important;
-      z-index: 9999 !important;
-    }
-
-  </style>
-
 
 </head>
 <body>
@@ -252,29 +233,6 @@
   }
 </script>
 
-<script>
-  function keepUnityInputsAlive() {
-    document.querySelectorAll("input, textarea").forEach(el => {
-      if (!el.classList.contains("realInput")) {
-        el.style.position = "absolute";
-        el.style.top = "0";
-        el.style.left = "0";
-        el.style.width = "1px";
-        el.style.height = "1px";
-        el.style.fontSize = "16px";
-        el.style.backgroundColor = "transparent";
-        el.style.color = "transparent";
-        el.style.caretColor = "transparent";
-        el.style.border = "none";
-        el.style.outline = "none";
-        el.style.zIndex = "0";
-      }
-    });
-  }
-
-  const observer = new MutationObserver(keepUnityInputsAlive);
-  observer.observe(document.body, { childList: true, subtree: true });
-</script>
 
 <script>
   function fixZIndexOnInputFocus() {

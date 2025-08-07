@@ -87,12 +87,27 @@
       transition: transform 0.2s ease-out;
     }
 
-    #unity-container input,
-    #unity-container textarea {
+  </style>
+
+  <style>
+    input:not(.realInput),
+    textarea:not(.realInput) {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: 160px !important;
+      height: 40px !important;
       font-size: 16px !important;
+      opacity: 0.01 !important; /* phải có để Android chịu show keyboard */
+      background: transparent !important;
+      color: transparent !important;
+      caret-color: transparent !important;
+      border: none !important;
+      outline: none !important;
       z-index: 9999 !important;
+      pointer-events: auto !important;
     }
-    
   </style>
 
 </head>
@@ -232,18 +247,37 @@
 </script>
 
 <script>
-  function fixZIndexOnInputFocus() {
-    const unityContainer = document.getElementById('unity-container');
-    document.addEventListener('focusin', (e) => {
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
-        unityContainer.style.zIndex = "0";
+  function fixUnityInputFields() {
+    const inputs = document.querySelectorAll("input, textarea");
+    inputs.forEach(input => {
+      if (!input.classList.contains("realInput")) {
+        input.setAttribute("autocomplete", "off");
+        input.setAttribute("autocorrect", "off");
+        input.setAttribute("autocapitalize", "off");
+        input.setAttribute("spellcheck", "false");
+        input.style.position = "absolute";
+        input.style.top = "50%";
+        input.style.left = "50%";
+        input.style.transform = "translate(-50%, -50%)";
+        input.style.width = "160px";
+        input.style.height = "40px";
+        input.style.fontSize = "16px";
+        input.style.opacity = "0.01";
+        input.style.backgroundColor = "transparent";
+        input.style.color = "transparent";
+        input.style.caretColor = "transparent";
+        input.style.border = "none";
+        input.style.outline = "none";
+        input.style.zIndex = "9999";
+        input.style.pointerEvents = "auto";
       }
     });
-    document.addEventListener('focusout', () => {
-      unityContainer.style.zIndex = "1";
-    });
   }
-  fixZIndexOnInputFocus();
+
+  // Gọi ban đầu và khi Unity thêm input
+  fixUnityInputFields();
+  const observer = new MutationObserver(fixUnityInputFields);
+  observer.observe(document.body, { childList: true, subtree: true });
 </script>
 
 </body>

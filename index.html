@@ -197,7 +197,6 @@
 
 
 
-
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
     //stagging
@@ -232,23 +231,6 @@
     }
   }
 </script>
-
-
-<script>
-  function fixZIndexOnInputFocus() {
-    const unityContainer = document.getElementById('unity-container');
-    document.addEventListener('focusin', (e) => {
-      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
-        unityContainer.style.zIndex = "0";
-      }
-    });
-    document.addEventListener('focusout', () => {
-      unityContainer.style.zIndex = "1";
-    });
-  }
-  fixZIndexOnInputFocus();
-</script>
-
 
 </body>
 </html>

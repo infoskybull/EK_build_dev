@@ -234,22 +234,26 @@
 </script>
 
 <script>
-  document.addEventListener("click", () => {
-    const input = document.querySelector("input, textarea");
-    if (input) {
-      input.style.opacity = "0.01";         // đủ để Android hiểu là "có"
-      input.style.pointerEvents = "auto";   // cho phép tương tác
-      input.style.zIndex = "99999";
-      input.style.position = "absolute";
-      input.style.top = "10px";
-      input.style.left = "10px";
-      input.style.width = "1px";
-      input.style.height = "1px";
-      input.style.fontSize = "16px";
+  const fixUnityInputAndroid = () => {
+    const inputs = document.querySelectorAll("input, textarea");
+    inputs.forEach(el => {
+      if (!el.classList.contains("realInput")) {
+        el.style.opacity = "0.01";              // Vẫn gần như vô hình
+        el.style.pointerEvents = "auto";        // Cho phép tương tác
+        el.style.position = "absolute";
+        el.style.zIndex = "9999";
+        el.style.top = "10px";
+        el.style.left = "10px";
+        el.style.width = "1px";
+        el.style.height = "1px";
+        el.style.fontSize = "16px";             // Rất quan trọng! < 16px sẽ bị Chrome chặn
+      }
+    });
+  };
 
-      input.focus(); // chỉ có hiệu lực nếu có click trước đó
-    }
-  });
+  // Quan sát DOM để sửa mỗi khi Unity tạo input mới
+  const observer = new MutationObserver(fixUnityInputAndroid);
+  observer.observe(document.body, { childList: true, subtree: true });
 </script>
 
 

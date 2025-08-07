@@ -90,17 +90,19 @@
     #unity-container input,
     #unity-container textarea {
       position: absolute !important;
-      background: transparent !important;
-      color: transparent !important;
-      caret-color: transparent !important;
-      border: none !important;
-      outline: none !important;
-      resize: none !important;
-      z-index: 1;
+      left: -1000px !important;   /* đẩy ra khỏi màn hình */
+      top: -1000px !important;
       width: 1px !important;
       height: 1px !important;
-      left: -1000px !important;
-      font-size: 16px !important; /* Quan trọng để tránh zoom trên Android */
+      font-size: 16px !important; /* tránh zoom trên Android */
+      background: transparent !important;
+      color: transparent !important;
+      border: none !important;
+      outline: none !important;
+      caret-color: transparent !important;
+      pointer-events: auto !important;
+      opacity: 1 !important; /* Vẫn phải có để Android hiểu là có input */
+      z-index: 0 !important;
     }
 
   </style>
@@ -254,51 +256,30 @@
 </script>
 
 <script>
-  const hideUnityInput = () => {
-    const allFrames = [window.document]; // tài liệu chính
-
-    // Nếu có iframe thì thêm vào danh sách kiểm tra
-    document.querySelectorAll("iframe").forEach(frame => {
-      try {
-        if (frame.contentDocument) {
-          allFrames.push(frame.contentDocument);
-        }
-      } catch (e) {
-        // Bỏ qua iframe cross-origin
+  const hideUnityInputFieldProperly = () => {
+    document.querySelectorAll("input, textarea").forEach(input => {
+      if (!input.classList.contains("realInput")) {
+        input.style.position = "absolute";
+        input.style.left = "-1000px";
+        input.style.top = "-1000px";
+        input.style.width = "1px";
+        input.style.height = "1px";
+        input.style.fontSize = "16px";
+        input.style.background = "transparent";
+        input.style.color = "transparent";
+        input.style.border = "none";
+        input.style.outline = "none";
+        input.style.caretColor = "transparent";
+        input.style.pointerEvents = "auto";
+        input.style.opacity = "1";
+        input.style.zIndex = "0";
       }
-    });
-
-    allFrames.forEach(doc => {
-      const inputs = doc.querySelectorAll("input, textarea");
-      inputs.forEach(el => {
-        if (!el.classList.contains("realInput")) {
-          el.style.width = "1px";
-          el.style.height = "1px";
-          el.style.left = "-1000px";
-          el.style.opacity = "1";
-          el.style.color = "transparent";
-          el.style.background = "transparent";
-          el.style.caretColor = "transparent";
-          el.style.zIndex = "1";
-          el.style.border = "none";
-          el.style.pointerEvents = "auto";
-        }
-      });
     });
   };
 
-  // Quan sát cả body và unity-container
-  const observer1 = new MutationObserver(hideUnityInput);
-  observer1.observe(document.body, { childList: true, subtree: true });
-
-  const unityContainer = document.getElementById("unity-container");
-  if (unityContainer) {
-    const observer2 = new MutationObserver(hideUnityInput);
-    observer2.observe(unityContainer, { childList: true, subtree: true });
-  }
-
-  // Chạy lặp lại mỗi 300ms để đảm bảo bắt được trên Android
-  setInterval(hideUnityInput, 300);
+  const observer = new MutationObserver(hideUnityInputFieldProperly);
+  observer.observe(document.body, { childList: true, subtree: true });
+  setInterval(hideUnityInputFieldProperly, 300); // fallback cho Android
 </script>
 
 <script>

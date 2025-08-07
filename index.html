@@ -86,6 +86,13 @@
       transform-origin: left;
       transition: transform 0.2s ease-out;
     }
+
+    #unity-container input,
+    #unity-container textarea {
+      font-size: 16px !important;
+      z-index: 9999 !important;
+    }
+    
   </style>
 
 </head>
@@ -223,5 +230,21 @@
     }
   }
 </script>
+
+<script>
+  function fixZIndexOnInputFocus() {
+    const unityContainer = document.getElementById('unity-container');
+    document.addEventListener('focusin', (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+        unityContainer.style.zIndex = "0";
+      }
+    });
+    document.addEventListener('focusout', () => {
+      unityContainer.style.zIndex = "1";
+    });
+  }
+  fixZIndexOnInputFocus();
+</script>
+
 </body>
 </html>

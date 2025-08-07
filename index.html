@@ -88,49 +88,6 @@
     }
   </style>
 
-  <style>
-    body{
-      margin:0;
-      overflow:hidden;
-      background:#000;
-    }
-    #unity-container{
-      position:fixed;
-      top:50%; left:50%;
-      transform:translate(-50%,-50%);
-      background:#000;
-    }
-
-    /* Biến CSS lấy tai thỏ iOS */
-    :root{
-      --sa-top:   env(safe-area-inset-top);
-      --sa-right: env(safe-area-inset-right);
-      --sa-bottom:env(safe-area-inset-bottom);
-      --sa-left:  env(safe-area-inset-left);
-    }
-  </style>
-
-  <style>
-    /* Ẩn input mặc định nhưng vẫn đảm bảo Android hiện bàn phím */
-    input:not(.realInput), textarea:not(.realInput) {
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%);
-      width: 160px !important;
-      height: 40px !important;
-      font-size: 16px !important; /* bắt buộc, Android không hiện bàn phím nếu < 16px */
-      opacity: 0 !important;
-      background-color: transparent !important;
-      color: transparent !important;
-      caret-color: transparent !important;
-      border: none !important;
-      outline: none !important;
-      z-index: 9999 !important;
-    }
-  </style>
-
-
 </head>
 <body>
 <div id="unity-container">
@@ -151,36 +108,11 @@
   const canvas   = document.getElementById('unity-container');
   const ASPECT   = 9/16;      // 16:9 (width/height)
 
-  // /* Lấy khoảng trống safe-area */
-  // function safeInsets(){
-  //   const cs = getComputedStyle(document.documentElement);
-  //   const sa = {
-  //     top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
-  //     right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
-  //     bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
-  //     left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
-  //   };
-  //   if(window.visualViewport){
-  //     const vv = window.visualViewport;
-  //     sa.top    = Math.max(sa.top   , vv.offsetTop);
-  //     sa.left   = Math.max(sa.left  , vv.offsetLeft);
-  //     sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
-  //     sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-  //   }
-  //   return sa;
-  // }
-
   function resizeCanvas(){
-    //const {top,right,bottom,left} = safeInsets();
     const safeW = window.innerWidth ;
     const safeH = window.innerHeight ;
 
-    // if(isMobile){
-    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-    //   canvas.style.width  = `${safeW}px`;
-    //   canvas.style.height = `${safeH}px`;
-    // }else{
-    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
+   
     const currentAspect = safeW / safeH;
     let w,h;
     if(currentAspect > ASPECT){      // cửa sổ quá rộng
@@ -192,10 +124,8 @@
     }
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
-    //}
   }
 
-  /* Gọi khi tải & khi đổi kích thước */
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
@@ -232,10 +162,6 @@
     document.querySelector("#unity-container").className = "unity-mobile";
     canvas1.className = "unity-mobile";
 
-  } else {
-    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-    //canvas.style.width = "360px";
-    //canvas.style.height = "640px";
   }
 
   document.querySelector("#unity-loading-bar").style.display = "block";
@@ -297,40 +223,5 @@
     }
   }
 </script>
-
-<script>
-  function fixUnityInputFields() {
-    const inputs = document.querySelectorAll("input, textarea");
-    inputs.forEach(input => {
-      if (!input.classList.contains("realInput")) {
-        input.setAttribute("autocomplete", "off");
-        input.setAttribute("autocorrect", "off");
-        input.setAttribute("autocapitalize", "off");
-        input.setAttribute("spellcheck", "false");
-        input.style.position = "absolute";
-        input.style.top = "50%";
-        input.style.left = "50%";
-        input.style.transform = "translate(-50%, -50%)";
-        input.style.width = "160px";
-        input.style.height = "40px";
-        input.style.fontSize = "16px";
-        input.style.opacity = "0";
-        input.style.backgroundColor = "transparent";
-        input.style.color = "transparent";
-        input.style.caretColor = "transparent";
-        input.style.border = "none";
-        input.style.outline = "none";
-        input.style.zIndex = "9999";
-      }
-    });
-  }
-
-  // Tự động áp dụng lại mỗi khi Unity tạo input mới
-  const observer = new MutationObserver(fixUnityInputFields);
-  observer.observe(document.body, { childList: true, subtree: true });
-
-  // Gọi một lần ngay khi tải xong
-  window.addEventListener('DOMContentLoaded', fixUnityInputFields);
-
 </body>
 </html>

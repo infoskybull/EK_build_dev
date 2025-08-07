@@ -243,31 +243,20 @@
 </script>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    let fixKeyboard = () => {
-      const inputs = document.querySelectorAll("input, textarea");
-      inputs.forEach(input => {
-        // Bắt buộc input hiển thị đúng
-        input.style.position = "absolute";
-        input.style.opacity = "1";
-        input.style.pointerEvents = "auto";
-        input.style.zIndex = "10000";
-        input.style.fontSize = "16px";
-        input.style.width = "80%";
-        input.style.height = "40px";
-        input.style.top = "50%";
-        input.style.left = "50%";
-        input.style.transform = "translate(-50%, -50%)";
-      });
-    };
+  const fixUnityInput = () => {
+    const inputs = document.querySelectorAll("input, textarea");
+    inputs.forEach(el => {
+      el.style.zIndex = "9999";
+      el.style.position = "absolute";
+      el.style.opacity = "1";
+      el.style.pointerEvents = "auto";
+      el.style.fontSize = "16px"; // để tránh zoom trên mobile
+    });
+  };
 
-    // Quan sát DOM, khi Unity thêm input vào, chỉnh lại style
-    const observer = new MutationObserver(fixKeyboard);
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-</script>
+  const observer = new MutationObserver(fixUnityInput);
+  observer.observe(document.body, { childList: true, subtree: true });
 
-<script>
   document.addEventListener('focusin', (e) => {
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
       document.getElementById("unity-container").style.zIndex = "0";

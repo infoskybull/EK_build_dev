@@ -86,16 +86,30 @@
       transform-origin: left;
       transition: transform 0.2s ease-out;
     }
-
-    #unity-container input,
-    #unity-container textarea {
-      font-size: 16px !important;
-      z-index: 9999 !important;
-    }
-    
   </style>
-  
-  
+
+  <style>
+    body{
+      margin:0;
+      overflow:hidden;
+      background:#000;
+    }
+    #unity-container{
+      position:fixed;
+      top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      background:#000;
+    }
+
+    /* Biến CSS lấy tai thỏ iOS */
+    :root{
+      --sa-top:   env(safe-area-inset-top);
+      --sa-right: env(safe-area-inset-right);
+      --sa-bottom:env(safe-area-inset-bottom);
+      --sa-left:  env(safe-area-inset-left);
+    }
+  </style>
+
 
 </head>
 <body>
@@ -117,11 +131,36 @@
   const canvas   = document.getElementById('unity-container');
   const ASPECT   = 9/16;      // 16:9 (width/height)
 
+  // /* Lấy khoảng trống safe-area */
+  // function safeInsets(){
+  //   const cs = getComputedStyle(document.documentElement);
+  //   const sa = {
+  //     top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
+  //     right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
+  //     bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
+  //     left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
+  //   };
+  //   if(window.visualViewport){
+  //     const vv = window.visualViewport;
+  //     sa.top    = Math.max(sa.top   , vv.offsetTop);
+  //     sa.left   = Math.max(sa.left  , vv.offsetLeft);
+  //     sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
+  //     sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
+  //   }
+  //   return sa;
+  // }
+
   function resizeCanvas(){
+    //const {top,right,bottom,left} = safeInsets();
     const safeW = window.innerWidth ;
     const safeH = window.innerHeight ;
 
-   
+    // if(isMobile){
+    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+    //   canvas.style.width  = `${safeW}px`;
+    //   canvas.style.height = `${safeH}px`;
+    // }else{
+    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
     const currentAspect = safeW / safeH;
     let w,h;
     if(currentAspect > ASPECT){      // cửa sổ quá rộng
@@ -133,8 +172,10 @@
     }
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
+    //}
   }
 
+  /* Gọi khi tải & khi đổi kích thước */
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
@@ -171,6 +212,10 @@
     document.querySelector("#unity-container").className = "unity-mobile";
     canvas1.className = "unity-mobile";
 
+  } else {
+    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+    //canvas.style.width = "360px";
+    //canvas.style.height = "640px";
   }
 
   document.querySelector("#unity-loading-bar").style.display = "block";
@@ -232,30 +277,5 @@
     }
   }
 </script>
-
-<script>
-  const fixUnityInputAndroid = () => {
-    const inputs = document.querySelectorAll("input, textarea");
-    inputs.forEach(el => {
-      if (!el.classList.contains("realInput")) {
-        el.style.opacity = "0.01";              // Vẫn gần như vô hình
-        el.style.pointerEvents = "auto";        // Cho phép tương tác
-        el.style.position = "absolute";
-        el.style.zIndex = "9999";
-        el.style.top = "10px";
-        el.style.left = "10px";
-        el.style.width = "1px";
-        el.style.height = "1px";
-        el.style.fontSize = "16px";             // Rất quan trọng! < 16px sẽ bị Chrome chặn
-      }
-    });
-  };
-
-  // Quan sát DOM để sửa mỗi khi Unity tạo input mới
-  const observer = new MutationObserver(fixUnityInputAndroid);
-  observer.observe(document.body, { childList: true, subtree: true });
-</script>
-
-
 </body>
 </html>

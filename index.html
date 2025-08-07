@@ -89,23 +89,6 @@
 
   </style>
 
-  <style>
-    #unity-container input,
-    #unity-container textarea {
-      font-size: 16px !important;      /* Android chỉ hiển thị bàn phím nếu >= 16px */
-      position: absolute !important;
-      top: 50% !important;
-      left: 50% !important;
-      transform: translate(-50%, -50%) !important;
-      width: 160px !important;
-      height: 40px !important;
-      opacity: 1 !important;           /* Phải hiển thị để bàn phím hoạt động */
-      z-index: 9999 !important;
-      background: white !important;
-      color: black !important;
-    }
-  </style>
-
 </head>
 <body>
 <div id="unity-container">
@@ -243,28 +226,33 @@
 </script>
 
 <script>
-  const fixUnityInput = () => {
-    const inputs = document.querySelectorAll("input, textarea");
-    inputs.forEach(el => {
-      el.style.zIndex = "9999";
-      el.style.position = "absolute";
-      el.style.opacity = "1";
-      el.style.pointerEvents = "auto";
-      el.style.fontSize = "16px"; // để tránh zoom trên mobile
-    });
-  };
+  const unityContainer = document.getElementById('unity-container');
 
-  const observer = new MutationObserver(fixUnityInput);
+  function elevateInputFields() {
+    const inputs = document.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+      // Tránh đè lên bởi Unity
+      input.style.zIndex = '9999';
+      input.style.position = 'absolute';
+      input.style.opacity = '1';
+      input.style.fontSize = '16px'; // tránh zoom hoặc lỗi nhập
+    });
+  }
+
+  const observer = new MutationObserver(() => {
+    elevateInputFields();
+  });
+
   observer.observe(document.body, { childList: true, subtree: true });
 
   document.addEventListener('focusin', (e) => {
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
-      document.getElementById("unity-container").style.zIndex = "0";
+      unityContainer.style.zIndex = '0';
     }
   });
 
-  document.addEventListener('focusout', () => {
-    document.getElementById("unity-container").style.zIndex = "1";
+  document.addEventListener('focusout', (e) => {
+    unityContainer.style.zIndex = '1';
   });
 </script>
 

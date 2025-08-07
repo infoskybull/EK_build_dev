@@ -243,22 +243,28 @@
 </script>
 
 <script>
-  function ensureAndroidKeyboardWorks() {
-    const inputs = document.querySelectorAll("input, textarea");
-    inputs.forEach(el => {
-      el.setAttribute("autocomplete", "off");
-      el.setAttribute("autocorrect", "off");
-      el.setAttribute("autocapitalize", "off");
-      el.setAttribute("spellcheck", "false");
-      el.style.fontSize = "16px";
-      el.style.opacity = "1";
-      el.style.pointerEvents = "auto";
-      el.style.zIndex = "9999";
-    });
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    let fixKeyboard = () => {
+      const inputs = document.querySelectorAll("input, textarea");
+      inputs.forEach(input => {
+        // Bắt buộc input hiển thị đúng
+        input.style.position = "absolute";
+        input.style.opacity = "1";
+        input.style.pointerEvents = "auto";
+        input.style.zIndex = "10000";
+        input.style.fontSize = "16px";
+        input.style.width = "80%";
+        input.style.height = "40px";
+        input.style.top = "50%";
+        input.style.left = "50%";
+        input.style.transform = "translate(-50%, -50%)";
+      });
+    };
 
-  const observer = new MutationObserver(ensureAndroidKeyboardWorks);
-  observer.observe(document.body, { childList: true, subtree: true });
+    // Quan sát DOM, khi Unity thêm input vào, chỉnh lại style
+    const observer = new MutationObserver(fixKeyboard);
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
 </script>
 
 </body>

@@ -144,16 +144,10 @@
   const ASPECT   = 9/16;      // 16:9 (width/height)
 
   function resizeCanvas(){
-    //const {top,right,bottom,left} = safeInsets();
     const safeW = window.innerWidth ;
     const safeH = window.innerHeight ;
 
-    // if(isMobile){
-    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-    //   canvas.style.width  = `${safeW}px`;
-    //   canvas.style.height = `${safeH}px`;
-    // }else{
-    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
+  
     const currentAspect = safeW / safeH;
     let w,h;
     if(currentAspect > ASPECT){      // cửa sổ quá rộng
@@ -165,24 +159,13 @@
     }
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
-    //}
   }
 
-  /* Gọi khi tải & khi đổi kích thước */
   resizeCanvas();
-  //window.addEventListener('resize', resizeCanvas);
+  window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
-      // Chênh lệch giữa viewport height và window height
-      const diff = window.innerHeight - window.visualViewport.height;
-
-      // Nếu chênh lệch > 150px → bàn phím đang mở → không resize
-      if (diff > 150) {
-        return;
-      }
-
-      // Ngược lại → resize bình thường
       resizeCanvas();
     });
   }

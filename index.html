@@ -99,7 +99,8 @@
       z-index: 1;
       width: 1px !important;
       height: 1px !important;
-      left: -1000px !important;  /* đẩy ra ngoài màn hình, không để opacity: 0 */
+      left: -1000px !important;
+      font-size: 16px !important; /* Quan trọng để tránh zoom trên Android */
     }
 
   </style>
@@ -271,11 +272,16 @@
       const inputs = doc.querySelectorAll("input, textarea");
       inputs.forEach(el => {
         if (!el.classList.contains("realInput")) {
-          el.style.opacity = "0.01";
-          el.style.position = "absolute";
-          el.style.pointerEvents = "none";
-          el.style.height = "0";
-          el.style.width = "0";
+          el.style.width = "1px";
+          el.style.height = "1px";
+          el.style.left = "-1000px";
+          el.style.opacity = "1";
+          el.style.color = "transparent";
+          el.style.background = "transparent";
+          el.style.caretColor = "transparent";
+          el.style.zIndex = "1";
+          el.style.border = "none";
+          el.style.pointerEvents = "auto";
         }
       });
     });

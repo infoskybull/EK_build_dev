@@ -233,36 +233,6 @@
   }
 </script>
 
-<script>
-  const unityContainer = document.getElementById('unity-container');
-
-  function elevateInputFields() {
-    const inputs = document.querySelectorAll('input, textarea');
-    inputs.forEach(input => {
-      // Tránh đè lên bởi Unity
-      input.style.zIndex = '9999';
-      input.style.position = 'absolute';
-      input.style.opacity = '1';
-      input.style.fontSize = '16px'; // tránh zoom hoặc lỗi nhập
-    });
-  }
-
-  const observer = new MutationObserver(() => {
-    elevateInputFields();
-  });
-
-  observer.observe(document.body, { childList: true, subtree: true });
-
-  document.addEventListener('focusin', (e) => {
-    if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
-      unityContainer.style.zIndex = '0';
-    }
-  });
-
-  document.addEventListener('focusout', (e) => {
-    unityContainer.style.zIndex = '1';
-  });
-</script>
 
 </body>
 </html>

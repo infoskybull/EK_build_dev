@@ -234,38 +234,22 @@
 </script>
 
 <script>
-  function autoFocusUnityInputWhenCreated() {
-    const observer = new MutationObserver(() => {
-      const input = document.querySelector("input:not(.realInput), textarea:not(.realInput)");
-      if (input) {
-        // Đặt lại style đảm bảo nó hiển thị để bàn phím được phép hiện
-        input.style.opacity = "0.01";
-        input.style.zIndex = "10000";
-        input.style.fontSize = "16px"; // bắt buộc cho Android
+  document.addEventListener("click", () => {
+    const input = document.querySelector("input, textarea");
+    if (input) {
+      input.style.opacity = "0.01";         // đủ để Android hiểu là "có"
+      input.style.pointerEvents = "auto";   // cho phép tương tác
+      input.style.zIndex = "99999";
+      input.style.position = "absolute";
+      input.style.top = "10px";
+      input.style.left = "10px";
+      input.style.width = "1px";
+      input.style.height = "1px";
+      input.style.fontSize = "16px";
 
-        // Tự động focus nếu chưa được focus
-        setTimeout(() => {
-          if (document.activeElement !== input) {
-            input.focus();
-          }
-        }, 50);
-      }
-    });
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  }
-
-  // Khi tap vào Unity thì chắc chắn gọi thử lại focus (dự phòng)
-  document.getElementById("unity-canvas").addEventListener("pointerdown", () => {
-    setTimeout(() => {
-      const input = document.querySelector("input:not(.realInput), textarea:not(.realInput)");
-      if (input) {
-        input.focus();
-      }
-    }, 100);
+      input.focus(); // chỉ có hiệu lực nếu có click trước đó
+    }
   });
-
-  autoFocusUnityInputWhenCreated();
 </script>
 
 

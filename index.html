@@ -90,6 +90,7 @@
     #unity-container input,
     #unity-container textarea {
       font-size: 16px !important;
+      z-index: 9999 !important;
     }
 
   </style>
@@ -204,18 +205,6 @@
 
 
 
-<script>
-  function fixZIndexOnFocus() {
-    const container = document.getElementById('unity-container');
-    document.addEventListener('focusin', () => {
-      container.style.zIndex = '0';
-    });
-    document.addEventListener('focusout', () => {
-      container.style.zIndex = '1';
-    });
-  }
-  fixZIndexOnFocus();
-</script>
 
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
@@ -252,6 +241,20 @@
   }
 </script>
 
+<script>
+  function fixZIndexOnInputFocus() {
+    const unityContainer = document.getElementById('unity-container');
+    document.addEventListener('focusin', (e) => {
+      if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") {
+        unityContainer.style.zIndex = "0";
+      }
+    });
+    document.addEventListener('focusout', () => {
+      unityContainer.style.zIndex = "1";
+    });
+  }
+  fixZIndexOnInputFocus();
+</script>
 
 
 </body>

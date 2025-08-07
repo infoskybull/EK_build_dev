@@ -233,6 +233,22 @@
   }
 </script>
 
+<script>
+  // Khi user ấn vào canvas Unity, tìm input mà Unity tạo và focus vào
+  document.getElementById("unity-canvas").addEventListener("pointerdown", () => {
+    setTimeout(() => {
+      const input = document.querySelector("input:not(.realInput), textarea:not(.realInput)");
+      if (input) {
+        input.style.opacity = "1";
+        input.style.position = "absolute";
+        input.style.zIndex = "9999";
+        input.style.fontSize = "16px";
+        input.focus();
+      }
+    }, 100); // delay nhẹ để đảm bảo Unity đã thêm input
+  });
+</script>
+
 
 </body>
 </html>

@@ -96,10 +96,10 @@
       border: none !important;
       outline: none !important;
       resize: none !important;
-      z-index: 2;
-      font-size: 16px !important; /* Android cần tối thiểu 16px để không zoom */
+      opacity: 0.01 !important;
+      z-index: 1;
     }
-    
+
   </style>
 
   <style>
@@ -146,10 +146,16 @@
   const ASPECT   = 9/16;      // 16:9 (width/height)
 
   function resizeCanvas(){
+    //const {top,right,bottom,left} = safeInsets();
     const safeW = window.innerWidth ;
     const safeH = window.innerHeight ;
 
-  
+    // if(isMobile){
+    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+    //   canvas.style.width  = `${safeW}px`;
+    //   canvas.style.height = `${safeH}px`;
+    // }else{
+    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
     const currentAspect = safeW / safeH;
     let w,h;
     if(currentAspect > ASPECT){      // cửa sổ quá rộng
@@ -161,13 +167,24 @@
     }
     canvas.style.width  = `${w}px`;
     canvas.style.height = `${h}px`;
+    //}
   }
 
+  /* Gọi khi tải & khi đổi kích thước */
   resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
+  //window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
+      // Chênh lệch giữa viewport height và window height
+      const diff = window.innerHeight - window.visualViewport.height;
+
+      // Nếu chênh lệch > 150px → bàn phím đang mở → không resize
+      if (diff > 150) {
+        return;
+      }
+
+      // Ngược lại → resize bình thường
       resizeCanvas();
     });
   }
@@ -234,43 +251,46 @@
 </script>
 
 <script>
-  const showInputTemporarily = (el) => {
-    el.style.opacity = "1";
-    el.style.color = "#000";
-    el.style.caretColor = "#000";
-    el.style.zIndex = "9999";
-    el.style.width = "160px";
-    el.style.height = "30px";
-    el.style.left = "50%";
-    el.style.top = "50%";
-    el.style.transform = "translate(-50%, -50%)";
-  };
+  const hideUnityInput = () => {
+    const allFrames = [window.document]; // tài liệu chính
 
-  const hideInput = (el) => {
-    el.style.opacity = "0";
-    el.style.position = "absolute";
-    el.style.background = "transparent";
-    el.style.color = "transparent";
-    el.style.caretColor = "transparent";
-    el.style.border = "none";
-    el.style.outline = "none";
-    el.style.resize = "none";
-    el.style.zIndex = "2";
-    el.style.fontSize = "16px";
-  };
-
-  const observer = new MutationObserver(() => {
-    const inputs = document.querySelectorAll("input, textarea");
-    inputs.forEach(el => {
-      if (!el.classList.contains("realInput")) {
-        showInputTemporarily(el);
-        setTimeout(() => hideInput(el), 1500);
+    // Nếu có iframe thì thêm vào danh sách kiểm tra
+    document.querySelectorAll("iframe").forEach(frame => {
+      try {
+        if (frame.contentDocument) {
+          allFrames.push(frame.contentDocument);
+        }
+      } catch (e) {
+        // Bỏ qua iframe cross-origin
       }
     });
-  });
 
-  observer.observe(document.body, { childList: true, subtree: true });
-  
+    allFrames.forEach(doc => {
+      const inputs = doc.querySelectorAll("input, textarea");
+      inputs.forEach(el => {
+        if (!el.classList.contains("realInput")) {
+          el.style.opacity = "0.01";
+          el.style.position = "absolute";
+          el.style.pointerEvents = "none";
+          el.style.height = "0";
+          el.style.width = "0";
+        }
+      });
+    });
+  };
+
+  // Quan sát cả body và unity-container
+  const observer1 = new MutationObserver(hideUnityInput);
+  observer1.observe(document.body, { childList: true, subtree: true });
+
+  const unityContainer = document.getElementById("unity-container");
+  if (unityContainer) {
+    const observer2 = new MutationObserver(hideUnityInput);
+    observer2.observe(unityContainer, { childList: true, subtree: true });
+  }
+
+  // Chạy lặp lại mỗi 300ms để đảm bảo bắt được trên Android
+  setInterval(hideUnityInput, 300);
 </script>
 
 <script>

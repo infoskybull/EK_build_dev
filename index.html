@@ -234,27 +234,43 @@
 </script>
 
 <script>
-  const hideUnityInput = () => {
-    setTimeout(() => {
-      const inputs = document.querySelectorAll("input, textarea");
-      inputs.forEach(el => {
-        if (!el.classList.contains("realInput")) {
-          el.style.position = "absolute";
-          el.style.background = "transparent";
-          el.style.color = "transparent";
-          el.style.caretColor = "transparent";
-          el.style.border = "none";
-          el.style.outline = "none";
-          el.style.resize = "none";
-          el.style.fontSize = "16px";
-          el.style.zIndex = "2";
-        }
-      });
-    }, 50);
+  const showInputTemporarily = (el) => {
+    el.style.opacity = "1";
+    el.style.color = "#000";
+    el.style.caretColor = "#000";
+    el.style.zIndex = "9999";
+    el.style.width = "160px";
+    el.style.height = "30px";
+    el.style.left = "50%";
+    el.style.top = "50%";
+    el.style.transform = "translate(-50%, -50%)";
   };
 
-  const observer = new MutationObserver(hideUnityInput);
+  const hideInput = (el) => {
+    el.style.opacity = "0";
+    el.style.position = "absolute";
+    el.style.background = "transparent";
+    el.style.color = "transparent";
+    el.style.caretColor = "transparent";
+    el.style.border = "none";
+    el.style.outline = "none";
+    el.style.resize = "none";
+    el.style.zIndex = "2";
+    el.style.fontSize = "16px";
+  };
+
+  const observer = new MutationObserver(() => {
+    const inputs = document.querySelectorAll("input, textarea");
+    inputs.forEach(el => {
+      if (!el.classList.contains("realInput")) {
+        showInputTemporarily(el);
+        setTimeout(() => hideInput(el), 1500);
+      }
+    });
+  });
+
   observer.observe(document.body, { childList: true, subtree: true });
+  
 </script>
 
 <script>

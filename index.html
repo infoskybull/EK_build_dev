@@ -90,18 +90,18 @@
     #unity-container input,
     #unity-container textarea {
       position: absolute !important;
-      left: -1000px !important;   /* đẩy ra khỏi màn hình */
-      top: -1000px !important;
+      left: -9999px !important;    /* đưa ra khỏi màn hình */
+      top: -9999px !important;
       width: 1px !important;
       height: 1px !important;
-      font-size: 16px !important; /* tránh zoom trên Android */
+      font-size: 16px !important;  /* BẮT BUỘC để Android hiện bàn phím */
       background: transparent !important;
       color: transparent !important;
+      caret-color: transparent !important;
       border: none !important;
       outline: none !important;
-      caret-color: transparent !important;
       pointer-events: auto !important;
-      opacity: 1 !important; /* Vẫn phải có để Android hiểu là có input */
+      opacity: 1 !important;
       z-index: 0 !important;
     }
 
@@ -256,30 +256,30 @@
 </script>
 
 <script>
-  const hideUnityInputFieldProperly = () => {
-    document.querySelectorAll("input, textarea").forEach(input => {
-      if (!input.classList.contains("realInput")) {
-        input.style.position = "absolute";
-        input.style.left = "-1000px";
-        input.style.top = "-1000px";
-        input.style.width = "1px";
-        input.style.height = "1px";
-        input.style.fontSize = "16px";
-        input.style.background = "transparent";
-        input.style.color = "transparent";
-        input.style.border = "none";
-        input.style.outline = "none";
-        input.style.caretColor = "transparent";
-        input.style.pointerEvents = "auto";
-        input.style.opacity = "1";
-        input.style.zIndex = "0";
+  function fixUnityInputForAndroid() {
+    document.querySelectorAll("input, textarea").forEach(el => {
+      if (!el.classList.contains("realInput")) {
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        el.style.top = "-9999px";
+        el.style.width = "1px";
+        el.style.height = "1px";
+        el.style.fontSize = "16px";
+        el.style.background = "transparent";
+        el.style.color = "transparent";
+        el.style.caretColor = "transparent";
+        el.style.border = "none";
+        el.style.outline = "none";
+        el.style.pointerEvents = "auto";
+        el.style.opacity = "1";
+        el.style.zIndex = "0";
       }
     });
-  };
+  }
 
-  const observer = new MutationObserver(hideUnityInputFieldProperly);
+  const observer = new MutationObserver(fixUnityInputForAndroid);
   observer.observe(document.body, { childList: true, subtree: true });
-  setInterval(hideUnityInputFieldProperly, 300); // fallback cho Android
+  setInterval(fixUnityInputForAndroid, 300); // giữ chắc chắn luôn đúng trên Android
 </script>
 
 <script>

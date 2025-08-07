@@ -96,8 +96,10 @@
       border: none !important;
       outline: none !important;
       resize: none !important;
-      opacity: 0.01 !important;
       z-index: 1;
+      width: 1px !important;
+      height: 1px !important;
+      left: -1000px !important;  /* đẩy ra ngoài màn hình, không để opacity: 0 */
     }
 
   </style>
@@ -252,36 +254,25 @@
 
 <script>
   const hideUnityInput = () => {
-    const allFrames = [window.document]; // tài liệu chính
-
-    // Nếu có iframe thì thêm vào danh sách kiểm tra
-    document.querySelectorAll("iframe").forEach(frame => {
-      try {
-        if (frame.contentDocument) {
-          allFrames.push(frame.contentDocument);
-        }
-      } catch (e) {
-        // Bỏ qua iframe cross-origin
-      }
-    });
-
-    allFrames.forEach(doc => {
-      const inputs = doc.querySelectorAll("input, textarea");
-      inputs.forEach(el => {
+    setTimeout(() => {
+      document.querySelectorAll("input, textarea").forEach(el => {
         if (!el.classList.contains("realInput")) {
-          el.style.opacity = "0.01";
-          el.style.position = "absolute";
-          el.style.pointerEvents = "none";
-          el.style.height = "0";
-          el.style.width = "0";
+          el.style.width = "1px";
+          el.style.height = "1px";
+          el.style.left = "-1000px";
+          el.style.opacity = "1";  // không dùng 0, vì Android sẽ bỏ qua focus
+          el.style.color = "transparent";
+          el.style.background = "transparent";
+          el.style.caretColor = "transparent";
+          el.style.zIndex = "1";
+          el.style.border = "none";
         }
       });
-    });
+    }, 50); // delay 50ms giúp đảm bảo input đã được DOM render xong
   };
 
-  // Quan sát cả body và unity-container
-  const observer1 = new MutationObserver(hideUnityInput);
-  observer1.observe(document.body, { childList: true, subtree: true });
+  const observer = new MutationObserver(hideUnityInput);
+  observer.observe(document.body, { childList: true, subtree: true });
 
   const unityContainer = document.getElementById("unity-container");
   if (unityContainer) {

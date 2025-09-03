@@ -431,7 +431,7 @@
       target,
       onChange(isOpen, detail) {
         console.log("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
-        sendLog("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
+        sendLog("Keyboard:", isOpen ? "OPEN" : "CLOSED");
         document.body.classList.toggle("kb-open", isOpen);
         // Nếu muốn báo về Unity có thể gọi:
         // if (typeof sendLog === "function") sendLog("keyboard:" + (isOpen ? "open" : "closed"));

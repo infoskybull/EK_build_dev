@@ -152,9 +152,13 @@
 
   function resizeCanvas(){
 
+    
+   
+    
     if (window.keyboardIsOpen) {
-
+      sendLog("keyboard open");
     } else {
+      sendLog("keyboard close");
       //const {top,right,bottom,left} = safeInsets();
       const safeW = window.innerWidth ;
       const safeH = window.innerHeight ;

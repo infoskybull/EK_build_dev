@@ -111,6 +111,19 @@
   </style>
 
 
+
+  <style>
+    /* Tránh lộ nền trắng sau bàn phím iOS */
+    body::before{
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 0;
+    }
+    #unity-container{ z-index: 1; }
+  </style>
+
 </head>
 <body>
 <div id="unity-container">
@@ -125,7 +138,6 @@
     </div>
   </div>
 </div>
-
 
 <script>
   const canvas   = document.getElementById('unity-container');
@@ -151,51 +163,61 @@
   // }
 
   function resizeCanvas(){
+    // Luôn tính theo visualViewport (nếu có) để tránh lộ nền khi bàn phím mở
+    const vv = window.visualViewport;
+    const safeW = vv ? vv.width  : window.innerWidth;
+    const safeH = vv ? vv.height : window.innerHeight;
 
-    
-   
-    
     if (window.keyboardIsOpen) {
-      sendLog("keyboard open");
+      try { sendLog("keyboard open"); } catch(e) {}
     } else {
-      sendLog("keyboard close");
-      //const {top,right,bottom,left} = safeInsets();
-      const safeW = window.innerWidth ;
-      const safeH = window.innerHeight ;
-
-      // if(isMobile){
-      //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-      //   canvas.style.width  = `${safeW}px`;
-      //   canvas.style.height = `${safeH}px`;
-      // }else{
-      /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
-      const currentAspect = safeW / safeH;
-      let w,h;
-      if(currentAspect > ASPECT){      // cửa sổ quá rộng
-        h = safeH;
-        w = h * ASPECT;
-      }else{                           // cửa sổ quá cao
-        w = safeW;
-        h = w / ASPECT;
-      }
-      canvas.style.width  = `${w}px`;
-      canvas.style.height = `${h}px`;
-      //}
+      try { sendLog("keyboard close"); } catch(e) {}
     }
-   
+
+    const currentAspect = safeW / safeH;
+    const ASPECT = 9/16;
+    let w, h;
+    if (currentAspect > ASPECT) {
+      h = safeH;
+      w = h * ASPECT;
+    } else {
+      w = safeW;
+      h = w / ASPECT;
+    }
+    const container = document.getElementById('unity-container');
+    container.style.width  = w + 'px';
+    container.style.height = h + 'px';
+  } = safeInsets();
+  const safeW = window.innerWidth ;
+  const safeH = window.innerHeight ;
+
+  // if(isMobile){
+  //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+  //   canvas.style.width  = `${safeW}px`;
+  //   canvas.style.height = `${safeH}px`;
+  // }else{
+  /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
+  const currentAspect = safeW / safeH;
+  let w,h;
+  if(currentAspect > ASPECT){      // cửa sổ quá rộng
+    h = safeH;
+    w = h * ASPECT;
+  }else{                           // cửa sổ quá cao
+    w = safeW;
+    h = w / ASPECT;
+  }
+  canvas.style.width  = `${w}px`;
+  canvas.style.height = `${h}px`;
+  //}
   }
 
   /* Gọi khi tải & khi đổi kích thước */
-
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
   window.addEventListener('orientationchange', resizeCanvas);
   if(window.visualViewport){
     window.visualViewport.addEventListener('resize', resizeCanvas);
   }
-
- 
-  
 </script>
 
 
@@ -221,11 +243,15 @@
 
     var meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover';
     document.getElementsByTagName('head')[0].appendChild(meta);
     document.querySelector("#unity-container").className = "unity-mobile";
     canvas1.className = "unity-mobile";
 
+  } else {
+    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+    //canvas.style.width = "360px";
+    //canvas.style.height = "640px";
   }
 
   document.querySelector("#unity-loading-bar").style.display = "block";

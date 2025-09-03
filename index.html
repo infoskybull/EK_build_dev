@@ -176,12 +176,18 @@
   }
 
   /* Gọi khi tải & khi đổi kích thước */
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('orientationchange', resizeCanvas);
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', resizeCanvas);
+
+  if (window.keyboardIsOpen) {
+    
+  } else {
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', resizeCanvas);
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', resizeCanvas);
+    }
   }
+  
 </script>
 
 
@@ -212,10 +218,6 @@
     document.querySelector("#unity-container").className = "unity-mobile";
     canvas1.className = "unity-mobile";
 
-  } else {
-    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-    //canvas.style.width = "360px";
-    //canvas.style.height = "640px";
   }
 
   document.querySelector("#unity-loading-bar").style.display = "block";
@@ -286,20 +288,12 @@
 </script>
 
 <script>
-  /**
-   * detectKeyboard - phát hiện bàn phím ảo mở/đóng trên mobile.
-   * Trả về { destroy } để gỡ listener khi không cần nữa.
-   *
-   * options:
-   * - threshold: số px co hẹp viewport để xem là "mở" (mặc định auto tính)
-   * - target: phần tử input/textarea thường dùng để mở phím (để nghe focus/blur)
-   * - onChange: (isOpen, detail) => void
-   */
   function detectKeyboard({
                             threshold,
                             target,
                             onChange = () => {},
                           } = {}) {
+    window.keyboardIsOpen = false;
     let baselineH = null;      // chiều cao viewport “bình thường”
     let isOpen = false;
     let rafId = null;
@@ -339,6 +333,8 @@
       const delta = getDelta();
       const th = effectiveThreshold();
       const nextOpen = delta > th;
+      // Cập nhật biến global
+      window.keyboardIsOpen = nextOpen;
       if (nextOpen !== isOpen) {
         isOpen = nextOpen;
         onChange(isOpen, { reason, delta, threshold: th });
@@ -418,10 +414,6 @@
     };
   }
 
-  function sendLog(log) {
-    unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
-  }
-
   // --- Khởi tạo cho input #myInput (nếu tồn tại) ---
   document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("myInput");
@@ -431,8 +423,13 @@
       target,
       onChange(isOpen, detail) {
         console.log("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
-        if(isOpen) sendLog("keyboard open");
-        else sendLog("keyboard close");
+        
+        if(isOpen){
+          sendLog("keyboard is open");
+        }
+        else {
+          sendLog("keyboard is close")
+        }
         document.body.classList.toggle("kb-open", isOpen);
         // Nếu muốn báo về Unity có thể gọi:
         // if (typeof sendLog === "function") sendLog("keyboard:" + (isOpen ? "open" : "closed"));
@@ -443,7 +440,6 @@
     // Nếu cần hủy:
     // window.__kbDetector = detector;
   });
-
 
 </script>
 

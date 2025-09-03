@@ -227,6 +227,16 @@
     loadingContainer.style.display = "none";
   }
 
+  const input = document.querySelector("input");
+
+  input.addEventListener("focus", () => {
+    sendLog("Keyboard likely opened");
+  });
+
+  input.addEventListener("blur", () => {
+    sendLog("Keyboard likely closed");
+  });
+
   var script = document.createElement("script");
   var unityInstanceGlobal;
   script.src = loaderUrl;
@@ -241,6 +251,11 @@
   };
 
   document.body.appendChild(script);
+
+  function sendLog(log) {
+    unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
+  }
+
 
 </script>
 <script>

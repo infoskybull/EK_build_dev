@@ -251,22 +251,6 @@
 
 </script>
 
-<input id="myInput" type="text" />
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("myInput");
-
-    if (input) {
-      input.addEventListener("focus", () => {
-        console.log("focus -> keyboard likely open");
-      });
-      input.addEventListener("blur", () => {
-        console.log("blur -> keyboard likely closed");
-      });
-    }
-  });
-</script>
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
     //stagging

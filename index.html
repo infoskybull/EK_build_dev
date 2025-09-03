@@ -99,6 +99,7 @@
       top:50%; left:50%;
       transform:translate(-50%,-50%);
       background:#000;
+      z-index: 0;
     }
 
     /* Biến CSS lấy tai thỏ iOS */
@@ -110,19 +111,6 @@
     }
   </style>
 
-
-
-  <style>
-    /* Tránh lộ nền trắng sau bàn phím iOS */
-    body::before{
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 0;
-    }
-    #unity-container{ z-index: 1; }
-  </style>
 
 </head>
 <body>
@@ -138,6 +126,7 @@
     </div>
   </div>
 </div>
+
 
 <script>
   const canvas   = document.getElementById('unity-container');
@@ -163,51 +152,28 @@
   // }
 
   function resizeCanvas(){
-    // Luôn tính theo visualViewport (nếu có) để tránh lộ nền khi bàn phím mở
-    const vv = window.visualViewport;
-    const safeW = vv ? vv.width  : window.innerWidth;
-    const safeH = vv ? vv.height : window.innerHeight;
+    //const {top,right,bottom,left} = safeInsets();
+    const safeW = window.innerWidth ;
+    const safeH = window.innerHeight ;
 
-    if (window.keyboardIsOpen) {
-      try { sendLog("keyboard open"); } catch(e) {}
-    } else {
-      try { sendLog("keyboard close"); } catch(e) {}
-    }
-
+    // if(isMobile){
+    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+    //   canvas.style.width  = `${safeW}px`;
+    //   canvas.style.height = `${safeH}px`;
+    // }else{
+    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
     const currentAspect = safeW / safeH;
-    const ASPECT = 9/16;
-    let w, h;
-    if (currentAspect > ASPECT) {
+    let w,h;
+    if(currentAspect > ASPECT){      // cửa sổ quá rộng
       h = safeH;
       w = h * ASPECT;
-    } else {
+    }else{                           // cửa sổ quá cao
       w = safeW;
       h = w / ASPECT;
     }
-    const container = document.getElementById('unity-container');
-    container.style.width  = w + 'px';
-    container.style.height = h + 'px';
-  } = safeInsets();
-  const safeW = window.innerWidth ;
-  const safeH = window.innerHeight ;
-
-  if(isMobile){
-    /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-    canvas.style.width  = `${safeW}px`;
-    canvas.style.height = `${safeH}px`;
-  }else{
-  /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
-  const currentAspect = safeW / safeH;
-  let w,h;
-  if(currentAspect > ASPECT){      // cửa sổ quá rộng
-    h = safeH;
-    w = h * ASPECT;
-  }else{                           // cửa sổ quá cao
-    w = safeW;
-    h = w / ASPECT;
-  }
-  canvas.style.width  = `${w}px`;
-  canvas.style.height = `${h}px`;
+    canvas.style.width  = `${w}px`;
+    canvas.style.height = `${h}px`;
+    //}
   }
 
   /* Gọi khi tải & khi đổi kích thước */
@@ -242,7 +208,7 @@
 
     var meta = document.createElement('meta');
     meta.name = 'viewport';
-    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes, viewport-fit=cover';
+    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
     document.getElementsByTagName('head')[0].appendChild(meta);
     document.querySelector("#unity-container").className = "unity-mobile";
     canvas1.className = "unity-mobile";
@@ -285,6 +251,22 @@
 
 </script>
 
+<input id="myInput" type="text" />
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("myInput");
+
+    if (input) {
+      input.addEventListener("focus", () => {
+        console.log("focus -> keyboard likely open");
+      });
+      input.addEventListener("blur", () => {
+        console.log("blur -> keyboard likely closed");
+      });
+    }
+  });
+</script>
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
     //stagging
@@ -456,7 +438,7 @@
       target,
       onChange(isOpen, detail) {
         console.log("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
-        
+
         if(isOpen){
           sendLog("keyboard is open");
         }

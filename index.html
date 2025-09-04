@@ -99,6 +99,7 @@
       top:50%; left:50%;
       transform:translate(-50%,-50%);
       background:#000;
+      z-index: 0;
     }
 
     /* Biến CSS lấy tai thỏ iOS */
@@ -227,6 +228,7 @@
     loadingContainer.style.display = "none";
   }
 
+
   var script = document.createElement("script");
   var unityInstanceGlobal;
   script.src = loaderUrl;
@@ -242,7 +244,13 @@
 
   document.body.appendChild(script);
 
+  function sendLog(log) {
+    unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
+  }
+
+
 </script>
+
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
     //stagging
@@ -277,5 +285,162 @@
     }
   }
 </script>
+
+<script>
+  function detectKeyboard({
+                            threshold,
+                            target,
+                            onChange = () => {},
+                          } = {}) {
+    window.keyboardIsOpen = false;
+    let baselineH = null;      // chiều cao viewport “bình thường”
+    let isOpen = false;
+    let rafId = null;
+
+    const getHeights = () => {
+      const vv = window.visualViewport;
+      return {
+        innerH: window.innerHeight,
+        visualH: vv ? Math.round(vv.height) : null
+      };
+    };
+
+    // Xác lập baseline khi DOM ổn định (sau 1 frame)
+    const setBaselineSoon = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        const { innerH, visualH } = getHeights();
+        baselineH = visualH ?? innerH;
+      });
+    };
+
+    const getDelta = () => {
+      const { innerH, visualH } = getHeights();
+      const current = visualH ?? innerH;
+      if (baselineH == null) baselineH = current;
+      return baselineH - current; // dương khi bị co hẹp
+    };
+
+    const effectiveThreshold = () => {
+      if (typeof threshold === "number") return threshold;
+      // Tự động: 18% chiều cao baseline, tối thiểu 100px, tối đa 320px
+      const base = baselineH || (getHeights().visualH ?? getHeights().innerH);
+      return Math.max(100, Math.min(320, Math.round(base * 0.18)));
+    };
+
+    const updateState = (reason) => {
+      const delta = getDelta();
+      const th = effectiveThreshold();
+      const nextOpen = delta > th;
+      // Cập nhật biến global
+      window.keyboardIsOpen = nextOpen;
+      if (nextOpen !== isOpen) {
+        isOpen = nextOpen;
+        onChange(isOpen, { reason, delta, threshold: th });
+      }
+    };
+
+    // Debounce nhẹ cho resize/scroll (iOS có thể bắn liên tục)
+    let t;
+    const debounceUpdate = (reason) => {
+      clearTimeout(t);
+      t = setTimeout(() => updateState(reason), 50);
+    };
+
+    // Listeners
+    const listeners = [];
+
+    const add = (el, ev, fn, opts) => {
+      el.addEventListener(ev, fn, opts);
+      listeners.push(() => el.removeEventListener(ev, fn, opts));
+    };
+
+    // Thiết lập baseline sau lần chạm đầu tiên / DOM ready
+    add(document, "visibilitychange", setBaselineSoon);
+    add(window, "orientationchange", () => {
+      // Orientation mới -> đặt baseline lại sau khi layout ổn
+      baselineH = null;
+      setBaselineSoon();
+      debounceUpdate("orientationchange");
+    });
+
+    // Resize: Android dùng innerHeight, iOS dùng VisualViewport tốt hơn
+    if (window.visualViewport) {
+      add(window.visualViewport, "resize", () => debounceUpdate("vv:resize"));
+      add(window.visualViewport, "scroll", () => debounceUpdate("vv:scroll"));
+    }
+    add(window, "resize", () => debounceUpdate("win:resize"));
+
+    // Focus/blur trên input giúp tăng độ chắc chắn
+    if (target) {
+      add(target, "focus", () => {
+        setBaselineSoon();
+        // chờ 1 nhịp để viewport co lại
+        setTimeout(() => updateState("focus"), 120);
+      });
+      add(target, "blur", () => {
+        // iOS đôi khi delay đóng; cho 1 chút thời gian
+        setTimeout(() => {
+          baselineH = null; // khi đóng, lấy lại baseline mới
+          updateState("blur");
+        }, 120);
+      });
+    } else {
+      // Nếu không truyền target, vẫn nghe capture trên document
+      add(document, "focusin", (e) => {
+        if (e.target && /^(input|textarea)$/i.test(e.target.tagName)) {
+          setBaselineSoon();
+          setTimeout(() => updateState("focusin"), 120);
+        }
+      }, true);
+      add(document, "focusout", () => {
+        setTimeout(() => {
+          baselineH = null;
+          updateState("focusout");
+        }, 120);
+      }, true);
+    }
+
+    // Khởi tạo baseline ban đầu
+    setBaselineSoon();
+
+    return {
+      destroy() {
+        cancelAnimationFrame(rafId);
+        clearTimeout(t);
+        listeners.forEach((off) => off());
+      }
+    };
+  }
+
+  // --- Khởi tạo cho input #myInput (nếu tồn tại) ---
+  document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("myInput");
+    const target = input || undefined;
+    // Tạo detector
+    const detector = detectKeyboard({
+      target,
+      onChange(isOpen, detail) {
+        console.log("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
+
+        if(isOpen){
+          sendLog("keyboard is open");
+        }
+        else {
+          sendLog("keyboard is close")
+        }
+        document.body.classList.toggle("kb-open", isOpen);
+        // Nếu muốn báo về Unity có thể gọi:
+        // if (typeof sendLog === "function") sendLog("keyboard:" + (isOpen ? "open" : "closed"));
+      }
+      // threshold: 140, // có thể điều chỉnh nếu cần
+    });
+
+    // Nếu cần hủy:
+    // window.__kbDetector = detector;
+  });
+
+</script>
+
 </body>
 </html>

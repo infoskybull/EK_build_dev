@@ -49,19 +49,20 @@
       top: 0;
       left: 0;
     }
+
     #unity-loading-bar {
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: flex-end;
       position: absolute;
-      bottom: 40px;
-      left: 0;
-      width: 100%;
-      height: 120px; /* Adjust as needed for your loading bar height */
+      bottom: 0px;
+      left: 50%;
+      width: 100%;                    /* bỏ kéo full-width viewport */
+      height: 120px;
       pointer-events: none;
-      z-index: 999;
+      z-index: 1;
       background: transparent;
+      top: revert-layer;
     }
 
     #unity-progress-bar-empty {
@@ -76,10 +77,11 @@
 
     #unity-progress-bar-full {
       position: absolute;
-      top: 0;
       left: 0;
+      bottom: 0;
+      align-items: center;
       width: 100%; /* sẽ bị scale theo chiều ngang */
-      height: 100%;
+      height: 30px;
       background: url('loading_full.png') no-repeat left center;
       background-size: cover;
       transform: scaleX(0); /* bắt đầu từ 0 */
@@ -121,6 +123,7 @@
     <div id="unity-loading-bar">
       <div id="unity-progress-bar-empty">
         <div id="unity-progress-bar-full"></div>
+
       </div>
 
     </div>
@@ -254,10 +257,10 @@
 <script>
   window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
     //stagging
-    manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
+    //manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
     //produce
-    //manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
-    testnet: true
+    manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
+    testnet: false
   });
 
   async function testJavaScriptFunction(recipientAddress, amount) {

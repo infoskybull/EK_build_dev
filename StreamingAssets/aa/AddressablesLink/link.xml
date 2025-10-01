@@ -3,10 +3,7 @@
     <type fullname="EK_Remake.FontAssets" preserve="all" />
     <type fullname="EK_Remake.ForceAcceptAll" preserve="all" />
     <type fullname="EK_Remake.UpdateLightingRoom" preserve="all" />
-    <type fullname="ListBoardLevel" preserve="all" />
     <type fullname="MagmaMoving" preserve="all" />
-    <type fullname=".BoardLevelConfigs" preserve="nothing" serialized="true" />
-    <type fullname=".ShapeData" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="MeshCombiner, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="MeshCombiner" preserve="all" />

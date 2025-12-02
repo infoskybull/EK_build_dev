@@ -104,9 +104,15 @@
       margin-top: 8px;
       text-align: center;
       font-family: 'Baloo2ExtraBold', sans-serif;
-      font-size: 14px;
-      color: #000000;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+      font-size: 20px;
+      color: #ffffff;
+      line-height: 1.1;
+      white-space: pre-line;
+      text-shadow:
+              -1px -1px 0 #000,
+              1px -1px 0 #000,
+              -1px  1px 0 #000,
+              1px  1px 0 #000;
     }
 
     @font-face {
@@ -115,7 +121,7 @@
       font-weight: 800;
       font-style: normal;
     }
-    
+
   </style>
 
   <style>
@@ -155,356 +161,356 @@
         </div>
       </div>
       <div id="unity-loading-text"></div>
-      
+
+    </div>
   </div>
-</div>
 
 
-<script>
-  const canvas   = document.getElementById('unity-container');
-  const ASPECT   = 9/16;      // 16:9 (width/height)
+  <script>
+    const canvas   = document.getElementById('unity-container');
+    const ASPECT   = 9/16;      // 16:9 (width/height)
 
-  // /* Lấy khoảng trống safe-area */
-  // function safeInsets(){
-  //   const cs = getComputedStyle(document.documentElement);
-  //   const sa = {
-  //     top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
-  //     right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
-  //     bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
-  //     left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
-  //   };
-  //   if(window.visualViewport){
-  //     const vv = window.visualViewport;
-  //     sa.top    = Math.max(sa.top   , vv.offsetTop);
-  //     sa.left   = Math.max(sa.left  , vv.offsetLeft);
-  //     sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
-  //     sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-  //   }
-  //   return sa;
-  // }
+    // /* Lấy khoảng trống safe-area */
+    // function safeInsets(){
+    //   const cs = getComputedStyle(document.documentElement);
+    //   const sa = {
+    //     top   : parseFloat(cs.getPropertyValue("--sa-top"))    || 0,
+    //     right : parseFloat(cs.getPropertyValue("--sa-right"))  || 0,
+    //     bottom: parseFloat(cs.getPropertyValue("--sa-bottom")) || 0,
+    //     left  : parseFloat(cs.getPropertyValue("--sa-left"))   || 0
+    //   };
+    //   if(window.visualViewport){
+    //     const vv = window.visualViewport;
+    //     sa.top    = Math.max(sa.top   , vv.offsetTop);
+    //     sa.left   = Math.max(sa.left  , vv.offsetLeft);
+    //     sa.right  = Math.max(sa.right , Math.max(0, window.innerWidth  - vv.width  - vv.offsetLeft));
+    //     sa.bottom = Math.max(sa.bottom, Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
+    //   }
+    //   return sa;
+    // }
 
-  function resizeCanvas(){
-    //const {top,right,bottom,left} = safeInsets();
-    const safeW = window.innerWidth ;
-    const safeH = window.innerHeight ;
+    function resizeCanvas(){
+      //const {top,right,bottom,left} = safeInsets();
+      const safeW = window.innerWidth ;
+      const safeH = window.innerHeight ;
 
-    // if(isMobile){
-    //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-    //   canvas.style.width  = `${safeW}px`;
-    //   canvas.style.height = `${safeH}px`;
-    // }else{
-    /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
-    const currentAspect = safeW / safeH;
-    let w,h;
-    if(currentAspect > ASPECT){      // cửa sổ quá rộng
-      h = safeH;
-      w = h * ASPECT;
-    }else{                           // cửa sổ quá cao
-      w = safeW;
-      h = w / ASPECT;
-    }
-    canvas.style.width  = `${w}px`;
-    canvas.style.height = `${h}px`;
-    //}
-  }
-
-  /* Gọi khi tải & khi đổi kích thước */
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('orientationchange', resizeCanvas);
-  if(window.visualViewport){
-    window.visualViewport.addEventListener('resize', resizeCanvas);
-  }
-</script>
-
-
-<script>
-  var canvas1 = document.querySelector("#unity-canvas");
-
-  var buildUrl = "Build";
-  var loaderUrl = buildUrl + "/EK.loader.js";
-  var config = {
-    arguments: [],
-    dataUrl: buildUrl + "/EK.data.unityweb",
-    frameworkUrl: buildUrl + "/EK.framework.js.unityweb",
-    codeUrl: buildUrl + "/EK.wasm.unityweb",
-    streamingAssetsUrl: "StreamingAssets",
-    companyName: "Skybull",
-    productName: "EK",
-    productVersion: "0.1.0",
-  };
-
-
-  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-    // Mobile device style: fill the whole browser client area with the game canvas:
-
-    var meta = document.createElement('meta');
-    meta.name = 'viewport';
-    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-    document.getElementsByTagName('head')[0].appendChild(meta);
-    document.querySelector("#unity-container").className = "unity-mobile";
-    canvas1.className = "unity-mobile";
-
-  } else {
-    // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-    //canvas.style.width = "360px";
-    //canvas.style.height = "640px";
-  }
-
-  document.querySelector("#unity-loading-bar").style.display = "block";
-
-  const loadingContainer = document.getElementById("unity-loading-background");
-  const progressFull = document.getElementById("unity-progress-bar-full");
-  const progressEmpty = document.getElementById("unity-progress-bar-empty");
-  window.DisableLoading = function() {
-    loadingContainer.style.display = "none";
-  }
-
-
-  const loadingTips = [
-    "The first data load may take some time, so please be patient.",
-    "At the Black Market, you can buy anything you want—as long as you have the money.",
-    "The more land you capture, the stronger your kingdom’s economy becomes.",
-    "Remember to have children to continue your family’s legacy.",
-    "Characters with higher stats will generate more national attributes for you.",
-    "Don’t forget to upgrade skills to make your characters even stronger."
-  ];
-
-  const loadingTipElement = document.getElementById("unity-loading-text");
-  let tipIndex = 0;
-
-  // hiển thị câu đầu tiên
-  loadingTipElement.textContent = loadingTips[tipIndex];
-
-  const TIP_INTERVAL = 2500; // 2500ms = 2.5s (bạn muốn 1000–2000 thì chỉnh ở đây)
-
-  // đổi tip theo chu kỳ
-  const tipTimer = setInterval(() => {
-    tipIndex = (tipIndex + 1) % loadingTips.length;
-    loadingTipElement.textContent = loadingTips[tipIndex];
-  }, TIP_INTERVAL);
-  
-
-  var script = document.createElement("script");
-  var unityInstanceGlobal;
-  script.src = loaderUrl;
-  script.onload = () => {
-    createUnityInstance(canvas1, config, (progress) => {
-      // progress = 0..1
-      const mask = document.getElementById("unity-progress-bar-mask");
-      mask.style.width = (progress * 100) + "%";
-
-      // if (progress >= 1) {
-      //   clearInterval(tipTimer);
-      //   loadingTipElement.textContent = "Loading complete!";
-      // }
-      
-    }).then((unityInstance) => {
-      unityInstanceGlobal = unityInstance;
-    }).catch((message) => {
-      alert(message);
-    });
-  };
-
-  document.body.appendChild(script);
-
-  function sendLog(log) {
-    unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
-  }
-
-
-</script>
-
-<script>
-  window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
-    //stagging
-    //manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
-    //produce
-    manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
-    testnet: false
-  });
-
-  async function testJavaScriptFunction(recipientAddress, amount) {
-    console.error("Unity says: " + recipientAddress + "_____" + amount);
-
-    const transaction = {
-      validUntil: Math.floor(Date.now() / 1000) + 300, // 5 minutes validity
-      messages:
-              [
-                {
-                  address: recipientAddress, // recipient
-                  amount: amount, // 50000000 = 0.05 TON in nanoTON
-                  payload: undefined, // optional, use .toBoc().toString('base64') if needed
-                }
-              ]
-    };
-
-    try {
-      const result = await window.tonConnect.sendTransaction(transaction);
-      console.log("✅ Transaction sent!");
-      console.log("📦 Result:", result);
-    }
-    catch (err) {
-      console.error("❌ Transaction rejected or failed:", err);
-    }
-  }
-</script>
-
-<script>
-  function detectKeyboard({
-                            threshold,
-                            target,
-                            onChange = () => {},
-                          } = {}) {
-    window.keyboardIsOpen = false;
-    let baselineH = null;      // chiều cao viewport “bình thường”
-    let isOpen = false;
-    let rafId = null;
-
-    const getHeights = () => {
-      const vv = window.visualViewport;
-      return {
-        innerH: window.innerHeight,
-        visualH: vv ? Math.round(vv.height) : null
-      };
-    };
-
-    // Xác lập baseline khi DOM ổn định (sau 1 frame)
-    const setBaselineSoon = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        const { innerH, visualH } = getHeights();
-        baselineH = visualH ?? innerH;
-      });
-    };
-
-    const getDelta = () => {
-      const { innerH, visualH } = getHeights();
-      const current = visualH ?? innerH;
-      if (baselineH == null) baselineH = current;
-      return baselineH - current; // dương khi bị co hẹp
-    };
-
-    const effectiveThreshold = () => {
-      if (typeof threshold === "number") return threshold;
-      // Tự động: 18% chiều cao baseline, tối thiểu 100px, tối đa 320px
-      const base = baselineH || (getHeights().visualH ?? getHeights().innerH);
-      return Math.max(100, Math.min(320, Math.round(base * 0.18)));
-    };
-
-    const updateState = (reason) => {
-      const delta = getDelta();
-      const th = effectiveThreshold();
-      const nextOpen = delta > th;
-      // Cập nhật biến global
-      window.keyboardIsOpen = nextOpen;
-      if (nextOpen !== isOpen) {
-        isOpen = nextOpen;
-        onChange(isOpen, { reason, delta, threshold: th });
+      // if(isMobile){
+      //   /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
+      //   canvas.style.width  = `${safeW}px`;
+      //   canvas.style.height = `${safeH}px`;
+      // }else{
+      /* 💻 DESKTOP: ép tỉ lệ 16:9, căn giữa */
+      const currentAspect = safeW / safeH;
+      let w,h;
+      if(currentAspect > ASPECT){      // cửa sổ quá rộng
+        h = safeH;
+        w = h * ASPECT;
+      }else{                           // cửa sổ quá cao
+        w = safeW;
+        h = w / ASPECT;
       }
-    };
-
-    // Debounce nhẹ cho resize/scroll (iOS có thể bắn liên tục)
-    let t;
-    const debounceUpdate = (reason) => {
-      clearTimeout(t);
-      t = setTimeout(() => updateState(reason), 50);
-    };
-
-    // Listeners
-    const listeners = [];
-
-    const add = (el, ev, fn, opts) => {
-      el.addEventListener(ev, fn, opts);
-      listeners.push(() => el.removeEventListener(ev, fn, opts));
-    };
-
-    // Thiết lập baseline sau lần chạm đầu tiên / DOM ready
-    add(document, "visibilitychange", setBaselineSoon);
-    add(window, "orientationchange", () => {
-      // Orientation mới -> đặt baseline lại sau khi layout ổn
-      baselineH = null;
-      setBaselineSoon();
-      debounceUpdate("orientationchange");
-    });
-
-    // Resize: Android dùng innerHeight, iOS dùng VisualViewport tốt hơn
-    if (window.visualViewport) {
-      add(window.visualViewport, "resize", () => debounceUpdate("vv:resize"));
-      add(window.visualViewport, "scroll", () => debounceUpdate("vv:scroll"));
+      canvas.style.width  = `${w}px`;
+      canvas.style.height = `${h}px`;
+      //}
     }
-    add(window, "resize", () => debounceUpdate("win:resize"));
 
-    // Focus/blur trên input giúp tăng độ chắc chắn
-    if (target) {
-      add(target, "focus", () => {
-        setBaselineSoon();
-        // chờ 1 nhịp để viewport co lại
-        setTimeout(() => updateState("focus"), 120);
-      });
-      add(target, "blur", () => {
-        // iOS đôi khi delay đóng; cho 1 chút thời gian
-        setTimeout(() => {
-          baselineH = null; // khi đóng, lấy lại baseline mới
-          updateState("blur");
-        }, 120);
-      });
+    /* Gọi khi tải & khi đổi kích thước */
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('orientationchange', resizeCanvas);
+    if(window.visualViewport){
+      window.visualViewport.addEventListener('resize', resizeCanvas);
+    }
+  </script>
+
+
+  <script>
+    var canvas1 = document.querySelector("#unity-canvas");
+
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/EK.loader.js";
+    var config = {
+      arguments: [],
+      dataUrl: buildUrl + "/EK.data.unityweb",
+      frameworkUrl: buildUrl + "/EK.framework.js.unityweb",
+      codeUrl: buildUrl + "/EK.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "Skybull",
+      productName: "EK",
+      productVersion: "0.1.0",
+    };
+
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      // Mobile device style: fill the whole browser client area with the game canvas:
+
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      document.querySelector("#unity-container").className = "unity-mobile";
+      canvas1.className = "unity-mobile";
+
     } else {
-      // Nếu không truyền target, vẫn nghe capture trên document
-      add(document, "focusin", (e) => {
-        if (e.target && /^(input|textarea)$/i.test(e.target.tagName)) {
-          setBaselineSoon();
-          setTimeout(() => updateState("focusin"), 120);
-        }
-      }, true);
-      add(document, "focusout", () => {
-        setTimeout(() => {
-          baselineH = null;
-          updateState("focusout");
-        }, 120);
-      }, true);
+      // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
+      //canvas.style.width = "360px";
+      //canvas.style.height = "640px";
     }
 
-    // Khởi tạo baseline ban đầu
-    setBaselineSoon();
+    document.querySelector("#unity-loading-bar").style.display = "block";
 
-    return {
-      destroy() {
-        cancelAnimationFrame(rafId);
-        clearTimeout(t);
-        listeners.forEach((off) => off());
-      }
+    const loadingContainer = document.getElementById("unity-loading-background");
+    const progressFull = document.getElementById("unity-progress-bar-full");
+    const progressEmpty = document.getElementById("unity-progress-bar-empty");
+    window.DisableLoading = function() {
+      loadingContainer.style.display = "none";
+    }
+
+
+    const loadingTips = [
+      "The first data load may take some time,\n so please be patient.",
+      "At the Black Market, you can buy anything\n you want—as long as you have the money.",
+      "The more land you capture, the stronger\n your kingdom’s economy becomes.",
+      "Remember to have children to continue\n your family’s legacy.",
+      "Characters with higher stats will generate\n more national attributes for you.",
+      "Don’t forget to upgrade skills to make\n your characters even stronger."
+    ];
+
+    const loadingTipElement = document.getElementById("unity-loading-text");
+    let tipIndex = 0;
+
+    // hiển thị câu đầu tiên
+    loadingTipElement.textContent = loadingTips[tipIndex];
+
+    const TIP_INTERVAL = 2500; // 2500ms = 2.5s (bạn muốn 1000–2000 thì chỉnh ở đây)
+
+    // đổi tip theo chu kỳ
+    const tipTimer = setInterval(() => {
+      tipIndex = (tipIndex + 1) % loadingTips.length;
+      loadingTipElement.textContent = loadingTips[tipIndex];
+    }, TIP_INTERVAL);
+
+
+    var script = document.createElement("script");
+    var unityInstanceGlobal;
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas1, config, (progress) => {
+        // progress = 0..1
+        const mask = document.getElementById("unity-progress-bar-mask");
+        mask.style.width = (progress * 100) + "%";
+
+        // if (progress >= 1) {
+        //   clearInterval(tipTimer);
+        //   loadingTipElement.textContent = "Loading complete!";
+        // }
+
+      }).then((unityInstance) => {
+        unityInstanceGlobal = unityInstance;
+      }).catch((message) => {
+        alert(message);
+      });
     };
-  }
 
-  // --- Khởi tạo cho input #myInput (nếu tồn tại) ---
-  document.addEventListener("DOMContentLoaded", () => {
-    const input = document.getElementById("myInput");
-    const target = input || undefined;
-    // Tạo detector
-    const detector = detectKeyboard({
-      target,
-      onChange(isOpen, detail) {
-        console.log("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
+    document.body.appendChild(script);
 
-        if(isOpen){
-          sendLog("keyboard is open");
-        }
-        else {
-          sendLog("keyboard is close")
-        }
-        document.body.classList.toggle("kb-open", isOpen);
-        // Nếu muốn báo về Unity có thể gọi:
-        // if (typeof sendLog === "function") sendLog("keyboard:" + (isOpen ? "open" : "closed"));
-      }
-      // threshold: 140, // có thể điều chỉnh nếu cần
+    function sendLog(log) {
+      unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
+    }
+
+
+  </script>
+
+  <script>
+    window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
+      //stagging
+      //manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
+      //produce
+      manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
+      testnet: false
     });
 
-    // Nếu cần hủy:
-    // window.__kbDetector = detector;
-  });
+    async function testJavaScriptFunction(recipientAddress, amount) {
+      console.error("Unity says: " + recipientAddress + "_____" + amount);
 
-</script>
+      const transaction = {
+        validUntil: Math.floor(Date.now() / 1000) + 300, // 5 minutes validity
+        messages:
+                [
+                  {
+                    address: recipientAddress, // recipient
+                    amount: amount, // 50000000 = 0.05 TON in nanoTON
+                    payload: undefined, // optional, use .toBoc().toString('base64') if needed
+                  }
+                ]
+      };
+
+      try {
+        const result = await window.tonConnect.sendTransaction(transaction);
+        console.log("✅ Transaction sent!");
+        console.log("📦 Result:", result);
+      }
+      catch (err) {
+        console.error("❌ Transaction rejected or failed:", err);
+      }
+    }
+  </script>
+
+  <script>
+    function detectKeyboard({
+                              threshold,
+                              target,
+                              onChange = () => {},
+                            } = {}) {
+      window.keyboardIsOpen = false;
+      let baselineH = null;      // chiều cao viewport “bình thường”
+      let isOpen = false;
+      let rafId = null;
+
+      const getHeights = () => {
+        const vv = window.visualViewport;
+        return {
+          innerH: window.innerHeight,
+          visualH: vv ? Math.round(vv.height) : null
+        };
+      };
+
+      // Xác lập baseline khi DOM ổn định (sau 1 frame)
+      const setBaselineSoon = () => {
+        cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          const { innerH, visualH } = getHeights();
+          baselineH = visualH ?? innerH;
+        });
+      };
+
+      const getDelta = () => {
+        const { innerH, visualH } = getHeights();
+        const current = visualH ?? innerH;
+        if (baselineH == null) baselineH = current;
+        return baselineH - current; // dương khi bị co hẹp
+      };
+
+      const effectiveThreshold = () => {
+        if (typeof threshold === "number") return threshold;
+        // Tự động: 18% chiều cao baseline, tối thiểu 100px, tối đa 320px
+        const base = baselineH || (getHeights().visualH ?? getHeights().innerH);
+        return Math.max(100, Math.min(320, Math.round(base * 0.18)));
+      };
+
+      const updateState = (reason) => {
+        const delta = getDelta();
+        const th = effectiveThreshold();
+        const nextOpen = delta > th;
+        // Cập nhật biến global
+        window.keyboardIsOpen = nextOpen;
+        if (nextOpen !== isOpen) {
+          isOpen = nextOpen;
+          onChange(isOpen, { reason, delta, threshold: th });
+        }
+      };
+
+      // Debounce nhẹ cho resize/scroll (iOS có thể bắn liên tục)
+      let t;
+      const debounceUpdate = (reason) => {
+        clearTimeout(t);
+        t = setTimeout(() => updateState(reason), 50);
+      };
+
+      // Listeners
+      const listeners = [];
+
+      const add = (el, ev, fn, opts) => {
+        el.addEventListener(ev, fn, opts);
+        listeners.push(() => el.removeEventListener(ev, fn, opts));
+      };
+
+      // Thiết lập baseline sau lần chạm đầu tiên / DOM ready
+      add(document, "visibilitychange", setBaselineSoon);
+      add(window, "orientationchange", () => {
+        // Orientation mới -> đặt baseline lại sau khi layout ổn
+        baselineH = null;
+        setBaselineSoon();
+        debounceUpdate("orientationchange");
+      });
+
+      // Resize: Android dùng innerHeight, iOS dùng VisualViewport tốt hơn
+      if (window.visualViewport) {
+        add(window.visualViewport, "resize", () => debounceUpdate("vv:resize"));
+        add(window.visualViewport, "scroll", () => debounceUpdate("vv:scroll"));
+      }
+      add(window, "resize", () => debounceUpdate("win:resize"));
+
+      // Focus/blur trên input giúp tăng độ chắc chắn
+      if (target) {
+        add(target, "focus", () => {
+          setBaselineSoon();
+          // chờ 1 nhịp để viewport co lại
+          setTimeout(() => updateState("focus"), 120);
+        });
+        add(target, "blur", () => {
+          // iOS đôi khi delay đóng; cho 1 chút thời gian
+          setTimeout(() => {
+            baselineH = null; // khi đóng, lấy lại baseline mới
+            updateState("blur");
+          }, 120);
+        });
+      } else {
+        // Nếu không truyền target, vẫn nghe capture trên document
+        add(document, "focusin", (e) => {
+          if (e.target && /^(input|textarea)$/i.test(e.target.tagName)) {
+            setBaselineSoon();
+            setTimeout(() => updateState("focusin"), 120);
+          }
+        }, true);
+        add(document, "focusout", () => {
+          setTimeout(() => {
+            baselineH = null;
+            updateState("focusout");
+          }, 120);
+        }, true);
+      }
+
+      // Khởi tạo baseline ban đầu
+      setBaselineSoon();
+
+      return {
+        destroy() {
+          cancelAnimationFrame(rafId);
+          clearTimeout(t);
+          listeners.forEach((off) => off());
+        }
+      };
+    }
+
+    // --- Khởi tạo cho input #myInput (nếu tồn tại) ---
+    document.addEventListener("DOMContentLoaded", () => {
+      const input = document.getElementById("myInput");
+      const target = input || undefined;
+      // Tạo detector
+      const detector = detectKeyboard({
+        target,
+        onChange(isOpen, detail) {
+          console.log("Keyboard:", isOpen ? "OPEN" : "CLOSED", detail);
+
+          if(isOpen){
+            sendLog("keyboard is open");
+          }
+          else {
+            sendLog("keyboard is close")
+          }
+          document.body.classList.toggle("kb-open", isOpen);
+          // Nếu muốn báo về Unity có thể gọi:
+          // if (typeof sendLog === "function") sendLog("keyboard:" + (isOpen ? "open" : "closed"));
+        }
+        // threshold: 140, // có thể điều chỉnh nếu cần
+      });
+
+      // Nếu cần hủy:
+      // window.__kbDetector = detector;
+    });
+
+  </script>
 
 </body>
 </html>

@@ -103,10 +103,17 @@
     #unity-loading-text {
       margin-top: 8px;
       text-align: center;
-      font-family: sans-serif;
+      font-family: 'Baloo2ExtraBold', sans-serif;
       font-size: 14px;
-      color: #ffffff;
+      color: #000000;
       text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    @font-face {
+      font-family: 'Baloo2ExtraBold';
+      src: url('font_Baloo2_ExtraBold.ttf') format('truetype');
+      font-weight: 800;
+      font-style: normal;
     }
     
   </style>
@@ -147,6 +154,8 @@
           <div id="unity-progress-bar-full"></div>
         </div>
       </div>
+      <div id="unity-loading-text"></div>
+      
   </div>
 </div>
 
@@ -252,6 +261,30 @@
   }
 
 
+  const loadingTips = [
+    "The first data load may take some time, so please be patient.",
+    "At the Black Market, you can buy anything you want—as long as you have the money.",
+    "The more land you capture, the stronger your kingdom’s economy becomes.",
+    "Remember to have children to continue your family’s legacy.",
+    "Characters with higher stats will generate more national attributes for you.",
+    "Don’t forget to upgrade skills to make your characters even stronger."
+  ];
+
+  const loadingTipElement = document.getElementById("unity-loading-text");
+  let tipIndex = 0;
+
+  // hiển thị câu đầu tiên
+  loadingTipElement.textContent = loadingTips[tipIndex];
+
+  const TIP_INTERVAL = 2500; // 2500ms = 2.5s (bạn muốn 1000–2000 thì chỉnh ở đây)
+
+  // đổi tip theo chu kỳ
+  const tipTimer = setInterval(() => {
+    tipIndex = (tipIndex + 1) % loadingTips.length;
+    loadingTipElement.textContent = loadingTips[tipIndex];
+  }, TIP_INTERVAL);
+  
+
   var script = document.createElement("script");
   var unityInstanceGlobal;
   script.src = loaderUrl;
@@ -260,6 +293,12 @@
       // progress = 0..1
       const mask = document.getElementById("unity-progress-bar-mask");
       mask.style.width = (progress * 100) + "%";
+
+      if (progress >= 1) {
+        clearInterval(tipTimer);
+        loadingTipElement.textContent = "Loading complete!";
+      }
+      
     }).then((unityInstance) => {
       unityInstanceGlobal = unityInstance;
     }).catch((message) => {

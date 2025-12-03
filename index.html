@@ -207,6 +207,7 @@ config.devicePixelRatio = 0.5;
             //const {top,right,bottom,left} = safeInsets();
             const safeW = window.innerWidth;
             const safeH = window.innerHeight;
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             if (isMobile) {
                 /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */

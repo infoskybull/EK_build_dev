@@ -150,6 +150,18 @@
 
 </head>
 <body>
+
+<!-- Telegram Ready -->
+<script>
+  Telegram.WebApp.ready();
+  Telegram.WebApp.expand();
+  Telegram.WebApp.disableVerticalSwipes();
+
+  setInterval(() => {
+    Telegram.WebApp.ready();
+  }, 1000);
+</script>
+
 <div id="unity-container">
   <canvas id="unity-canvas"></canvas>
 

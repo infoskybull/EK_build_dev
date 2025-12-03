@@ -207,12 +207,13 @@ config.devicePixelRatio = 0.5;
             //const {top,right,bottom,left} = safeInsets();
             const safeW = window.innerWidth;
             const safeH = window.innerHeight;
+            
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             if (isMobile) {
                 /* 📱 MOBILE: chiếm toàn bộ vùng an toàn, tỉ lệ tùy máy */
-                const safeWM = 240;
-                const safeHM = 427;
+                const safeWM = 360;
+                const safeHM = 640;
                 canvas.style.width = `${safeWM}px`;
                 canvas.style.height = `${safeHM}px`;
             } else {

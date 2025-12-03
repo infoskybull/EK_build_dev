@@ -205,7 +205,7 @@
             //const {top,right,bottom,left} = safeInsets();
             const safeW = window.innerWidth;
             const safeH = window.innerHeight;
-            
+
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
             if (isMobile) {
@@ -255,8 +255,8 @@
             productName: "EK",
             productVersion: "0.1.0",
         };
-        
-        config.devicePixelRatio = 1;
+
+        config.devicePixelRatio = 0.5;
 
         if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
             // Mobile device style: fill the whole browser client area with the game canvas:
@@ -312,21 +312,26 @@
         var unityInstanceGlobal;
         script.src = loaderUrl;
         script.onload = () => {
-            createUnityInstance(canvas1, config, (progress) => {
-                // progress = 0..1
-                const mask = document.getElementById("unity-progress-bar-mask");
-                mask.style.width = (progress * 100) + "%";
 
-                // if (progress >= 1) {
-                //   clearInterval(tipTimer);
-                //   loadingTipElement.textContent = "Loading complete!";
-                // }
+            setTimeout(() => {
+                createUnityInstance(canvas1, config, (progress) => {
+                    // progress = 0..1
+                    const mask = document.getElementById("unity-progress-bar-mask");
+                    mask.style.width = (progress * 100) + "%";
 
-            }).then((unityInstance) => {
-                unityInstanceGlobal = unityInstance;
-            }).catch((message) => {
-                alert(message);
-            });
+                    // if (progress >= 1) {
+                    //   clearInterval(tipTimer);
+                    //   loadingTipElement.textContent = "Loading complete!";
+                    // }
+
+                }).then((unityInstance) => {
+                    unityInstanceGlobal = unityInstance;
+                }).catch((message) => {
+                    alert(message);
+                });
+
+            }, 1200);
+
         };
 
         document.body.appendChild(script);

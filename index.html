@@ -365,8 +365,9 @@
     }
 
     // 🔥 Chỉ warning trên mobile
-    if (isMobile && window.warningMessage) {
-      showWarningAndStart(window.warningMessage);
+    if (isMobile) {
+      showWarningAndStart( "⚠️ The game may crash if you use an iOS device below Iphone 13 promax. " +
+              "\nPlease play on a higher device or PC for a better experience.");
     } else {
       // desktop hoặc không có message → load thẳng
       startUnityGame();
@@ -378,10 +379,6 @@
 
   </script>
 
-  <script>
-    window.warningMessage = "⚠️ The game may crash if you use an iOS device below Iphone 13 promax. " +
-            "\nPlease play on a higher device or PC for a better experience.";
-  </script>
 
   <script>
     window.tonConnect = new TON_CONNECT_UI.TonConnectUI({

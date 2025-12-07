@@ -122,6 +122,44 @@
       font-style: normal;
     }
 
+    /* Popup warning overlay */
+    #warning-popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999; /* đảm bảo luôn trên canvas */
+    }
+
+    #warning-popup .warning-popup-content {
+      max-width: 320px;
+      margin: 0 16px;
+      background: #111;
+      color: #fff;
+      padding: 16px 20px;
+      border-radius: 12px;
+      text-align: center;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+    }
+
+    #warning-text {
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.4;
+      white-space: pre-line;   /* cho phép xuống dòng theo \n */
+    }
+
+    #warning-confirm {
+      border: none;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
   </style>
 
   <style>
@@ -162,6 +200,13 @@
       </div>
       <div id="unity-loading-text"></div>
 
+    </div>
+  </div>
+
+  <div id="warning-popup">
+    <div class="warning-popup-content">
+      <div id="warning-text"></div>
+      <button id="warning-confirm">OK</button>
     </div>
   </div>
 
@@ -240,8 +285,9 @@
       productVersion: "0.1.0",
     };
 
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    if (isMobile) {
       // Mobile device style: fill the whole browser client area with the game canvas:
 
       var meta = document.createElement('meta');
@@ -282,7 +328,7 @@
     // hiển thị câu đầu tiên
     loadingTipElement.textContent = loadingTips[tipIndex];
 
-    const TIP_INTERVAL = 5000; 
+    const TIP_INTERVAL = 5000;
 
     // đổi tip theo chu kỳ
     const tipTimer = setInterval(() => {
@@ -293,27 +339,46 @@
 
     var script = document.createElement("script");
     var unityInstanceGlobal;
-    script.src = loaderUrl;
-    script.onload = () => {
-      createUnityInstance(canvas1, config, (progress) => {
-        // progress = 0..1
-        const mask = document.getElementById("unity-progress-bar-mask");
-        mask.style.width = (progress * 100) + "%";
 
-        // if (progress >= 1) {
-        //   clearInterval(tipTimer);
-        //   loadingTipElement.textContent = "Loading complete!";
-        // }
 
-      }).then((unityInstance) => {
-        unityInstanceGlobal = unityInstance;
-      }).catch((message) => {
-        alert(message);
-      });
-    };
+    function startUnityGame() {
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas1, config, (progress) => {
+          const mask = document.getElementById("unity-progress-bar-mask");
+          mask.style.width = (progress * 100) + "%";
+        }).then((unityInstance) => {
+          unityInstanceGlobal = unityInstance;
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    }
 
-    document.body.appendChild(script);
+    function showWarningAndStart(message) {
+      const popup = document.getElementById("warning-popup");
+      const textEl = document.getElementById("warning-text");
+      const btn = document.getElementById("warning-confirm");
 
+      textEl.textContent = message;
+      popup.style.display = "flex";
+
+      btn.onclick = function () {
+        popup.style.display = "none";
+        startUnityGame();
+      };
+    }
+
+    // 🔥 Chỉ warning trên mobile
+    if (isMobile) {
+      showWarningAndStart( "⚠️ The game may crash if you use an iOS device below Iphone 13 promax. " +
+              "\nPlease play on a higher device or PC for a better experience.");
+    } else {
+      // desktop hoặc không có message → load thẳng
+      startUnityGame();
+    }
     function sendLog(log) {
       unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
     }
@@ -321,12 +386,13 @@
 
   </script>
 
+
   <script>
     window.tonConnect = new TON_CONNECT_UI.TonConnectUI({
       //stagging
-      //manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
+      manifestUrl: "https://seahorse-magnetic-officially.ngrok.app/api/ftp/File/get-file/eternal_king_mainnet.json",
       //produce
-      manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
+      //manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
       testnet: false
     });
 

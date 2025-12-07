@@ -372,13 +372,13 @@
     }
 
     // 🔥 Chỉ warning trên mobile
-    //if (isMobile) {
+    if (isMobile) {
       showWarningAndStart( "⚠️ The game may crash if you use an iOS device below Iphone 13 promax. " +
               "\nPlease play on a higher device or PC for a better experience.");
-    //} else {
+    } else {
       // desktop hoặc không có message → load thẳng
-      //startUnityGame();
-    //}
+      startUnityGame();
+    }
     function sendLog(log) {
       unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
     }

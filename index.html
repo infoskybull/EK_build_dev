@@ -380,6 +380,7 @@
       startUnityGame();
     }
     function sendLog(log) {
+      if (!unityInstanceGlobal) return;   // 🔥 Unity chưa sẵn sàng → bỏ qua
       unityInstanceGlobal.SendMessage('Web3Manager', 'OnSendLog', log);
     }
 
@@ -421,7 +422,8 @@
       }
     }
   </script>
-  
+
+
 
 </body>
 </html>

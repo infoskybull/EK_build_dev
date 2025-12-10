@@ -152,20 +152,19 @@
       background-size: contain;
     }
 
-    /* Nhóm 2 nút nằm bên trong card */
+    /* Nhóm 2 nút */
     .warning-buttons {
-      position: absolute;
-      left: 50%;
-      bottom: 32px;                /* chỉnh lên/xuống tùy bạn */
-      transform: translateX(-50%);
+      margin-top: 20px;          /* tăng khoảng cách xuống dưới */
       display: flex;
-      gap: 16px;
+      gap: 14px;                 /* khoảng cách giữa 2 nút */
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     /* Ảnh nút Support / Okey */
     .warning-btn {
-      width: 140px;                /* chỉnh cho khớp card */
+      width: 110px;              /* giảm 20% từ 140px → 110px */
+      max-width: 35vw;           /* co theo màn nhỏ */
       height: auto;
       cursor: pointer;
       user-select: none;

@@ -206,7 +206,17 @@
   <div id="warning-popup">
     <div class="warning-popup-content">
       <div id="warning-text"></div>
-      <button id="warning-confirm">OK</button>
+      <div style="display:flex; gap:10px; justify-content:center; margin-top:10px;">
+        <button id="warning-confirm"
+                style="border:none; padding:8px 20px; border-radius:999px; font-size:14px; cursor:pointer;">
+          OK
+        </button>
+
+        <button id="warning-support"
+                style="border:none; padding:8px 20px; border-radius:999px; font-size:14px; cursor:pointer; background:#3fa9f5; color:#fff;">
+          Support
+        </button>
+      </div>
     </div>
   </div>
 
@@ -361,6 +371,7 @@
       const popup = document.getElementById("warning-popup");
       const textEl = document.getElementById("warning-text");
       const btn = document.getElementById("warning-confirm");
+      const supportBtn = document.getElementById("warning-support");
 
       textEl.textContent = message;
       popup.style.display = "flex";
@@ -368,6 +379,10 @@
       btn.onclick = function () {
         popup.style.display = "none";
         startUnityGame();
+      };
+
+      supportBtn.onclick = function () {
+        window.open("https://t.me/EK_Community", "_blank");
       };
     }
 

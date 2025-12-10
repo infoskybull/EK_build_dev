@@ -131,40 +131,41 @@
       align-items: center;
       justify-content: center;
       z-index: 999999;
-      padding: 16px;           /* chừa mép trong màn hình */
+      padding: 16px; /* chừa mép trong màn hình */
     }
 
-    /* Khung chứa reminder + nút */
+    /* Khung chứa card */
     #warning-popup .warning-popup-content {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      width: 100%;
-      max-width: 360px;        /* không rộng hơn 360px */
-    }
-
-    /* Ảnh reminder tự co cho vừa màn hình */
-    .warning-image {
-      width: 100%;             /* full chiều rộng khung */
-      height: auto;
-      max-width: 100%;
-      max-height: 60vh;        /* không chiếm quá 60% chiều cao màn hình */
-      object-fit: contain;
-    }
-
-    /* Nhóm 2 nút */
-    .warning-buttons {
-      margin-top: 12px;
-      display: flex;
-      gap: 12px;
       justify-content: center;
-      flex-wrap: wrap;         /* màn nhỏ thì nút có thể xuống dòng */
+      width: 100%;
+    }
+
+    /* Card chính dùng background Reminder.png */
+    .warning-card {
+      position: relative;
+      width: 100%;
+      max-width: 360px;            /* giống hình bạn chụp */
+      aspect-ratio: 1020 / 687;    /* tỉ lệ gốc của Reminder.png */
+      background: url("Reminder.png") no-repeat center;
+      background-size: contain;
+    }
+
+    /* Nhóm 2 nút nằm bên trong card */
+    .warning-buttons {
+      position: absolute;
+      left: 50%;
+      bottom: 32px;                /* chỉnh lên/xuống tùy bạn */
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      justify-content: center;
     }
 
     /* Ảnh nút Support / Okey */
     .warning-btn {
-      width: 140px;
-      max-width: 40vw;         /* trên màn nhỏ thì co theo % màn hình */
+      width: 140px;                /* chỉnh cho khớp card */
       height: auto;
       cursor: pointer;
       user-select: none;
@@ -215,16 +216,12 @@
 
   <div id="warning-popup">
     <div class="warning-popup-content">
-
-      <!-- Nền popup -->
-      <img src="Reminder.png" class="warning-image" alt="Reminder" />
-
-      <!-- 2 nút -->
-      <div class="warning-buttons">
-        <img id="warning-support" src="btnSuport.png" class="warning-btn" alt="Support" />
-        <img id="warning-confirm" src="btnOkay.png"   class="warning-btn" alt="Okay" />
+      <div class="warning-card">
+        <div class="warning-buttons">
+          <img id="warning-support" src="btnSuport.png" class="warning-btn" alt="Support" />
+          <img id="warning-confirm" src="btnOkay.png"   class="warning-btn" alt="Okay" />
+        </div>
       </div>
-
     </div>
   </div>
 

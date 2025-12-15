@@ -62,14 +62,13 @@
       pointer-events: none;
       z-index: 1;
       background: transparent;
-      top: revert-layer;
     }
 
-    #unity-progress-bar-empty {
+    #unity-progress-loading-bar-empty {
       width: 240px;
       height: 30px;
       margin: 10px auto 0 auto;
-      background: url('loading_empty.png') no-repeat center;
+      background: url('loading_bar_empty.png') no-repeat center;
       background-size: cover;
       overflow: hidden;
       position: relative;
@@ -77,7 +76,7 @@
 
 
 
-    #unity-progress-bar-mask {
+    #unity-progress-loading-bar-mask {
       height: 100%;
       width: 0%;            /* bắt đầu từ 0% */
       overflow: hidden;
@@ -86,14 +85,14 @@
       top: 0;
     }
 
-    #unity-progress-bar-full {
+    #unity-progress-loading-bar-full {
       position: absolute;
       left: 0;
       bottom: 0;
       align-items: center;
       width: 100%; /* sẽ bị scale theo chiều ngang */
       height: 30px;
-      background: url('loading_full.png') no-repeat left center;
+      background: url('loading_bar_full.png') no-repeat left center;
       background-size: cover;
       transform: scaleX(1); /* bắt đầu từ 0 */
       transform-origin: left;
@@ -130,34 +129,44 @@
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 999999; /* đảm bảo luôn trên canvas */
+      z-index: 999999;
+      padding: 16px; /* chừa mép trong màn hình */
     }
 
+    /* Khung chứa card */
     #warning-popup .warning-popup-content {
-      max-width: 320px;
-      margin: 0 16px;
-      background: #111;
-      color: #fff;
-      padding: 16px 20px;
-      border-radius: 12px;
-      text-align: center;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
     }
 
-    #warning-text {
-      margin-bottom: 12px;
-      font-size: 14px;
-      line-height: 1.4;
-      white-space: pre-line;   /* cho phép xuống dòng theo \n */
+    /* Card chính dùng background Reminder.png */
+    .warning-card {
+      position: relative;
+      width: 100%;
+      max-width: 360px;            /* giống hình bạn chụp */
+      aspect-ratio: 1020 / 687;    /* tỉ lệ gốc của Reminder.png */
+      background: url("Reminder.png") no-repeat center;
+      background-size: contain;
     }
 
-    #warning-confirm {
-      border: none;
-      padding: 8px 20px;
-      border-radius: 999px;
-      font-size: 14px;
+    /* Nhóm 2 nút */
+    .warning-buttons {
+      margin-top: 180px;          /* tăng khoảng cách xuống dưới */
+      display: flex;
+      gap: 14px;                 /* khoảng cách giữa 2 nút */
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Ảnh nút Support / Okey */
+    .warning-btn {
+      width: 110px;              /* giảm 20% từ 140px → 110px */
+      max-width: 35vw;           /* co theo màn nhỏ */
+      height: auto;
       cursor: pointer;
+      user-select: none;
     }
 
   </style>
@@ -193,9 +202,9 @@
 
   <div id="unity-loading-background">
     <div id="unity-loading-bar">
-      <div id="unity-progress-bar-empty">
-        <div id="unity-progress-bar-mask">
-          <div id="unity-progress-bar-full"></div>
+      <div id="unity-progress-loading-bar-empty">
+        <div id="unity-progress-loading-bar-mask">
+          <div id="unity-progress-loading-bar-full"></div>
         </div>
       </div>
       <div id="unity-loading-text"></div>
@@ -205,8 +214,12 @@
 
   <div id="warning-popup">
     <div class="warning-popup-content">
-      <div id="warning-text"></div>
-      <button id="warning-confirm">OK</button>
+      <div class="warning-card">
+        <div class="warning-buttons">
+          <img id="warning-support" src="btnSuport.png" class="warning-btn" alt="Support" />
+          <img id="warning-confirm" src="btnOkay.png"   class="warning-btn" alt="Okay" />
+        </div>
+      </div>
     </div>
   </div>
 
@@ -306,8 +319,8 @@
     document.querySelector("#unity-loading-bar").style.display = "block";
 
     const loadingContainer = document.getElementById("unity-loading-background");
-    const progressFull = document.getElementById("unity-progress-bar-full");
-    const progressEmpty = document.getElementById("unity-progress-bar-empty");
+    const progressFull = document.getElementById("unity-progress-loading-bar-full");
+    const progressEmpty = document.getElementById("unity-progress-loading-bar-empty");
     window.DisableLoading = function() {
       loadingContainer.style.display = "none";
     }
@@ -346,7 +359,7 @@
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas1, config, (progress) => {
-          const mask = document.getElementById("unity-progress-bar-mask");
+          const mask = document.getElementById("unity-progress-loading-bar-mask");
           mask.style.width = (progress * 100) + "%";
         }).then((unityInstance) => {
           unityInstanceGlobal = unityInstance;
@@ -357,24 +370,26 @@
       document.body.appendChild(script);
     }
 
-    function showWarningAndStart(message) {
-      const popup = document.getElementById("warning-popup");
-      const textEl = document.getElementById("warning-text");
-      const btn = document.getElementById("warning-confirm");
+    function showWarningAndStart() {
+      const popup      = document.getElementById("warning-popup");
+      const okBtn      = document.getElementById("warning-confirm");
+      const supportBtn = document.getElementById("warning-support");
 
-      textEl.textContent = message;
       popup.style.display = "flex";
 
-      btn.onclick = function () {
+      okBtn.onclick = function () {
         popup.style.display = "none";
         startUnityGame();
       };
+
+      supportBtn.onclick = function () {
+        window.open("https://t.me/EK_Community", "_blank");
+      };
     }
 
-    // 🔥 Chỉ warning trên mobile
+
     if (isMobile) {
-      showWarningAndStart( "⚠️ The game may crash if you use an iOS device below Iphone 13 promax. " +
-              "\nPlease play on a higher device or PC for a better experience.");
+      showWarningAndStart( );
     } else {
       // desktop hoặc không có message → load thẳng
       startUnityGame();
@@ -394,7 +409,7 @@
       //produce
       //manifestUrl: "https://ftpserver.thedungeondiver.com/api/ftp/File/get-file/eternal_king_mainnet.json",
       testnet: true
-      
+
     });
 
     async function testJavaScriptFunction(recipientAddress, amount) {

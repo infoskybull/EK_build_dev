@@ -165,6 +165,7 @@
     <type fullname="PopupCostumeDetail" preserve="all" />
     <type fullname="PopupExchangeCurrency" preserve="all" />
     <type fullname="PopupIntroDailyQuest" preserve="all" />
+    <type fullname="PopupListRewards" preserve="all" />
     <type fullname="PopupLockScreen" preserve="all" />
     <type fullname="PopupMiniGame" preserve="all" />
     <type fullname="PopupNextRankingEvaluate" preserve="all" />
@@ -309,6 +310,7 @@
   </assembly>
   <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AtlasSpriteProvider" preserve="all" />
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />

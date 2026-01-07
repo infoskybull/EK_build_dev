@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "349018958764",
+    "project_id": "eternal-kings",
+    "storage_bucket": "eternal-kings.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:349018958764:android:83515353460ff6c884a809",
+        "android_client_info": {
+          "package_name": "com.skybull.ek"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-ur5WpFkCSjm-WhK_Enoxk7FnDEOMLB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

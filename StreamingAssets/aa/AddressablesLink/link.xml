@@ -12,6 +12,7 @@
     <type fullname="CardFlip" preserve="all" />
     <type fullname="CellVfxPlayer" preserve="all" />
     <type fullname="CharacterAssignedInfo" preserve="all" />
+    <type fullname="CharacterConfigSO" preserve="all" />
     <type fullname="CharacterStatInfo" preserve="all" />
     <type fullname="CharacterWithPlatform" preserve="all" />
     <type fullname="ColliderAutoFitSize" preserve="all" />

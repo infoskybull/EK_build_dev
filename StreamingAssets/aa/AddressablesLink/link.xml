@@ -22,6 +22,7 @@
     <type fullname="Crystal.SafeArea" preserve="all" />
     <type fullname="CurrencyText" preserve="all" />
     <type fullname="DraggableButton" preserve="all" />
+    <type fullname="DynastyDataUI" preserve="all" />
     <type fullname="EK_Remake.ButtonAutoDecision" preserve="all" />
     <type fullname="EK_Remake.ButtonAutoSelect" preserve="all" />
     <type fullname="EK_Remake.CastleInsidePanel" preserve="all" />
@@ -30,6 +31,7 @@
     <type fullname="EK_Remake.CharTooltipSkillUI" preserve="all" />
     <type fullname="EK_Remake.CreateCharacter" preserve="all" />
     <type fullname="EK_Remake.CurrencyExchangeSO" preserve="all" />
+    <type fullname="EK_Remake.DynastyController" preserve="all" />
     <type fullname="EK_Remake.EffectInfoUI" preserve="all" />
     <type fullname="EK_Remake.EmotionSwitch" preserve="all" />
     <type fullname="EK_Remake.FlagCreate" preserve="all" />
@@ -193,6 +195,7 @@
     <type fullname="RewardsPopupUI" preserve="all" />
     <type fullname="RoomToUpgrade" preserve="all" />
     <type fullname="RoundInfo" preserve="all" />
+    <type fullname="ScreenDetail" preserve="all" />
     <type fullname="SeasonRewardCard" preserve="all" />
     <type fullname="SeasonRewardHandle" preserve="all" />
     <type fullname="SeasonRewardItem" preserve="all" />

@@ -228,22 +228,6 @@
 
 
   <script>
-      var dbName = '/idbfs';
-
-      var request = indexedDB.deleteDatabase(dbName);
-
-      request.onsuccess = function () {
-          console.log("Deleted IndexedDB successfully");
-      };
-
-      request.onerror = function () {
-          console.warn("Could not delete IndexedDB");
-      };
-
-      request.onblocked = function () {
-          console.warn("Deletion blocked (database might be in use)");
-      };
-
     const canvas   = document.getElementById('unity-container');
     const ASPECT   = 9/16;      // 16:9 (width/height)
 

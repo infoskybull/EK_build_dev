@@ -138,7 +138,6 @@
     <type fullname="LeaderBoardUI" preserve="all" />
     <type fullname="LineNodeUI" preserve="all" />
     <type fullname="ListBoardLevel" preserve="all" />
-    <type fullname="MagmaMoving" preserve="all" />
     <type fullname="MakeMedicinePanel" preserve="all" />
     <type fullname="MiniGameHUDController" preserve="all" />
     <type fullname="MiniGameResultControl" preserve="all" />
@@ -276,9 +275,6 @@
   <assembly fullname="Coffee.UIParticle, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Coffee.UIExtensions.UIParticle" preserve="all" />
   </assembly>
-  <assembly fullname="MeshCombiner, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="MeshCombiner" preserve="all" />
-  </assembly>
   <assembly fullname="spine-unity, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="Spine.Unity.SkeletonDataAsset" preserve="all" />
     <type fullname="Spine.Unity.SkeletonGraphic" preserve="all" />
@@ -362,6 +358,7 @@
     <type fullname="UnityEngine.Shader" preserve="all" />
     <type fullname="UnityEngine.SkinnedMeshRenderer" preserve="all" />
     <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.SpriteRenderer" preserve="all" />
     <type fullname="UnityEngine.TextAsset" preserve="all" />
     <type fullname="UnityEngine.Texture2D" preserve="all" />
     <type fullname="UnityEngine.Transform" preserve="all" />
@@ -380,9 +377,6 @@
     <type fullname="UnityEngine.BoxCollider2D" preserve="all" />
     <type fullname="UnityEngine.CompositeCollider2D" preserve="all" />
     <type fullname="UnityEngine.Rigidbody2D" preserve="all" />
-  </assembly>
-  <assembly fullname="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-    <type fullname="UnityEngine.MeshCollider" preserve="all" />
   </assembly>
   <assembly fullname="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.Font" preserve="all" />
